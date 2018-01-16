@@ -1,6 +1,6 @@
-#include <os.h>
+#include <io.h>
 
-asm int
+asm error_code
 _os_ss_attr(char *pathname, int perm)
 {
 	asm
