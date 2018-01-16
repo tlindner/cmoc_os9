@@ -2,48 +2,182 @@
 
 /**** TEXT FUNCTIONS ****/
 
+/**
+ * @brief Home the text cursor.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_curhome(path_id path);
 
+/**
+ * @brief Turn on the text cursor.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_curon(path_id path);
 
+/**
+ * @brief Turn off the text cursor.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_curoff(path_id path);
 
+/**
+ * @brief Move the text cursor left.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_curlft(path_id path);
 
+/**
+ * @brief Move the text cursor right.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_currght(path_id path);
 
+/**
+ * @brief Move the text cursor up.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_curup(path_id path);
 
+/**
+ * @brief Move the text cursor down.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_curdwn(path_id path);
 
+/**
+ * @brief Erase the line the text cursor is on.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_erline(path_id path);
 
+/**
+ * @brief Erase from the text cursor to the end of the line.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_ereoline(path_id path);
 
+/**
+ * @brief Erase from the text cursor to the end of the screen.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_ereoscrn(path_id path);
 
+/**
+ * @brief Clear the screen and home the text cursor.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_clear(path_id path);
 
+/**
+ * @brief Play the system bell sound.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_bell(path_id path);
 
+/**
+ * @brief Write a carriage return.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_crrtn(path_id path);
 
+/**
+ * @brief Turn on reverse text highlighting.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_revon(path_id path);
 
+/**
+ * @brief Turn off reverse text highlighting.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_revoff(path_id path);
 
+/**
+ * @brief Turn on text underlining.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_undlnon(path_id path);
 
+/**
+ * @brief Turn off text underlining.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_undlnoff(path_id path);
 
+/**
+ * @brief Turn on text blinking.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_blnkon(path_id path);
 
+/**
+ * @brief Turn on text blinking.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_blnkoff(path_id path);
 
+/**
+ * @brief Insert a blank line at the text cursor's line.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_insline(path_id path);
 
+/**
+ * @brief Delete the contents of the line at the text cursor's line.
+ *
+ * @param path_id The path to the window device.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_delline(path_id path);
 
+/**
+ * @brief Position the text cursor at the X and Y coordinates on the screen.
+ *
+ * @param path_id The path to the window device.
+ * @param x The X coordinate to position the text cursor.
+ * @param y The Y coordinate to position the text cursor.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _cgfx_curxy(path_id path, int x, int y);
 
 
