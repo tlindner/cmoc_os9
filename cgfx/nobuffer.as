@@ -6,16 +6,15 @@
 * by Mike Sweet 5/10/90
 *
 
- ifp1
- use /dd/defs/os9defs.a
- endc
- 
- psect nobuffer,0,0,0,10,0
+ section code
 
+_errno EXTERN
+
+_write EXPORT
 _write:
  pshs y save y
  tfr u,y byte count to y
- os9 I$WRITE write it
+ os9 $8A I$WRITE write it
  bcs error
  puls y
 _Flush:
@@ -25,9 +24,8 @@ _Flush:
 
 error puls y
  clra
- std errno,y
+ std _errno,y
  ldd #-1
  rts return -1 on error
-
 
  endsect

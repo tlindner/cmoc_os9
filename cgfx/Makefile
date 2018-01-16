@@ -1,10 +1,10 @@
 # Makefile to create assembler library
 #include $(NITROS9DIR)/rules.mak
 
-MODS = window.o cbuffer.o
+MODS = window.o cbuffer.o draw.o config.o text.o #nobuffer.o
 CC = cmoc
 ASM = lwasm
-CFLAGS = -I../include
+CFLAGS = -I../include -I./include
 ASOUT = --obj -o
 
 %.o: %.as

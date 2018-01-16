@@ -1,4 +1,4 @@
-#include <io.h>
+#include <cgfx.h>
 
 /***************************************
  * Standard Windowing Functions (MW C) *
@@ -6,7 +6,7 @@
  ***************************************/
 
 asm void
-_cgfx_dwset(path_id path)
+_cgfx_dwset(path_id path, int sty, int cpx, int cpy, int szx, int szy, int fprn, int bprn, int bdprn)
 {
 	asm
 	{

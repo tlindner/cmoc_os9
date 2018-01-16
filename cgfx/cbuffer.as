@@ -87,6 +87,7 @@ _CGFXBuf:
 * U=byte count
 *
 
+_write EXPORT
 _write:
  cmpa _CPath,y writing to a different path?
  beq noflush1 no, don't flush yet...

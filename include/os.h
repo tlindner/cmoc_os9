@@ -126,3 +126,5 @@ typedef struct _registers_6809 {
 } registers_6809;
 
 error_code _os_syscall(int callcode, registers_6809 *registers);
+
+int abs(int value);
