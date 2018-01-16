@@ -1,11 +1,6 @@
 #include <cgfx.h>
 
-/******************************************
- * Configuration Functions                *
- * Copyright (c) 1989 by Mike Sweet       *
- ******************************************/
-
-asm void
+asm error_code
 _cgfx_pset(path_id path, int grpnum, int bufnum)
 {
     asm
@@ -16,7 +11,7 @@ _write EXTERNAL
     }
 }
 
-asm void
+asm error_code
 _cgfx_lset(path_id path, int grpnum, int bufnum)
 {
     asm
@@ -26,7 +21,7 @@ _cgfx_lset(path_id path, int grpnum, int bufnum)
     }
 }
 
-asm void
+asm error_code
 _cgfx_defcolr(path_id path)
 {
     asm
@@ -42,7 +37,7 @@ _cgfx_defcolr(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_palette(path_id path, int prn, int colno)
 {
     asm
@@ -52,7 +47,7 @@ _cgfx_palette(path_id path, int prn, int colno)
     }
 }
 
-asm void
+asm error_code
 _cgfx_fcolor(path_id path, int prn)
 {
     asm
@@ -62,7 +57,7 @@ _cgfx_fcolor(path_id path, int prn)
     }
 }
 
-asm void
+asm error_code
 _cgfx_bcolor(path_id path, int prn)
 {
     asm
@@ -72,7 +67,7 @@ _cgfx_bcolor(path_id path, int prn)
     }
 }
 
-asm void
+asm error_code
 _cgfx_border(path_id path, int prn)
 {
     asm
@@ -82,7 +77,7 @@ _cgfx_border(path_id path, int prn)
     }
 }
 
-asm void
+asm error_code
 _cgfx_scalesw(path_id path, int bsw)
 {
     asm
@@ -103,11 +98,12 @@ send3   pshs u
     }
 }
 
-asm void
+asm error_code
 _cgfx_setgc(path_id path, int grpnum, int bufnum)
 {
     asm
     {
+_sysret EXTERNAL
         ldd #$1b39
 
 send4   pshs u
@@ -123,13 +119,6 @@ send4   pshs u
         leas 4,s
 
 os9err0 puls u
-        bcc noerr0
-        clra
-        std _errno,y
-        ldd #-1
-        rts
-noerr0  clra
-        clrb
-        rts
+		lbra	_sysret
     }
 }

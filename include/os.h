@@ -159,6 +159,38 @@ typedef byte BOOL;
 #define	SS_DSize        SS_ScSiz
 #define	SS_VarSect      SS_DStat
 
+/* System Specific and User Defined Codes */
+#define	SS_AAGBf        0x80
+#define	SS_SLGBf        0x81
+#define	SS_Mount        0x82
+#define	SS_RdNet        0x83
+#define	SS_MpGPB        0x84
+#define	SS_Slots        0x85
+
+/* Level 2 Windowing Codes */
+#define	SS_WnSet        0x86	// Set up High Level Windowing Information
+#define	SS_MnSel        0x87	// Request High level Menu Handler take determine next event
+#define	SS_SBar         0x88	// SetStat to set position block on Window scroll bars
+#define	SS_Mouse        0x89	// Return Mouse information packet (COCO)
+#define	SS_MsSig        0x8A	// SetStat to tell driver to send signal on mouse event
+#define	SS_AScrn        0x8B	// Allocate a screen for application poking
+#define	SS_DScrn        0x8C	// Display a screen allocated by SS_AScrn
+#define	SS_FScrn        0x8D	// Free a screen allocated by SS_AScrn
+#define	SS_PScrn        0x8E	// Polymorph Screen into different screen type
+#define	SS_ScInf        0x8F	// Get Current screen info for direct writes
+#define	SS_Palet        0x91	// Return palette information
+#define	SS_Montr        0x92	// Get and Set Monitor Type
+#define	SS_ScTyp        0x93	// Get screen type information
+#define	SS_GIP          0x94	// Global Input Parameters (SetStat)
+#define	SS_UMBar        0x95	// update menu bar (SetStat)
+#define	SS_FBRgs        0x96	// return color registers (GetStat)
+#define	SS_DfPal        0x97	// set/return default palette registers (Getstat/Setstat)
+#define	SS_Tone         0x98	// Generate a tone using 6 bit sound
+#define	SS_GIP2         0x99	// Global Input Params #2 (L2V3)
+#define	SS_AnPal        0x9A	// Animate palettes (L2V3)
+#define	SS_FndBf        0x9B	// Find named buffer (L2V3)
+
+
 error_code _os9_sleep(int *ticks);
 
 

@@ -5,8 +5,8 @@
  * Copyright (c) 1989 by Mike Sweet   *
  **************************************/
 
-asm void
-_cgfx_curhome(path_id path)
+asm error_code
+_cgfx_curhom(path_id path)
 {
     asm
     {
@@ -16,7 +16,7 @@ _write EXTERNAL
     }
 }
 
-asm void
+asm error_code
 _cgfx_curon(path_id path)
 {
     asm
@@ -26,7 +26,7 @@ _cgfx_curon(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_curoff(path_id path)
 {
     asm
@@ -36,7 +36,7 @@ _cgfx_curoff(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_curlft(path_id path)
 {
     asm
@@ -46,7 +46,7 @@ _cgfx_curlft(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_currght(path_id path)
 {
     asm
@@ -56,7 +56,7 @@ _cgfx_currght(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_curup(path_id path)
 {
     asm
@@ -66,7 +66,7 @@ _cgfx_curup(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_curdwn(path_id path)
 {
     asm
@@ -76,7 +76,7 @@ _cgfx_curdwn(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_erline(path_id path)
 {
     asm
@@ -86,7 +86,7 @@ _cgfx_erline(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_ereoline(path_id path)
 {
     asm
@@ -96,7 +96,7 @@ _cgfx_ereoline(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_ereoscrn(path_id path)
 {
     asm
@@ -106,7 +106,7 @@ _cgfx_ereoscrn(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_clear(path_id path)
 {
     asm
@@ -116,7 +116,7 @@ _cgfx_clear(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_bell(path_id path)
 {
     asm
@@ -126,7 +126,7 @@ _cgfx_bell(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_crrtn(path_id path)
 {
     asm
@@ -136,7 +136,7 @@ _cgfx_crrtn(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_revon(path_id path)
 {
     asm
@@ -146,7 +146,7 @@ _cgfx_revon(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_revoff(path_id path)
 {
     asm
@@ -156,7 +156,7 @@ _cgfx_revoff(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_undlnon(path_id path)
 {
     asm
@@ -166,7 +166,7 @@ _cgfx_undlnon(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_undlnoff(path_id path)
 {
     asm
@@ -176,7 +176,7 @@ _cgfx_undlnoff(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_blnkon(path_id path)
 {
     asm
@@ -186,7 +186,7 @@ _cgfx_blnkon(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_blnkoff(path_id path)
 {
     asm
@@ -196,7 +196,7 @@ _cgfx_blnkoff(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_insline(path_id path)
 {
     asm
@@ -206,11 +206,12 @@ _cgfx_insline(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_delline(path_id path)
 {
     asm
     {
+_sysret	EXTERNAL
         ldd #$1f31
 
 send2   pshs d,u
@@ -225,18 +226,12 @@ sendit  leax ,s
         lbsr _write
         puls x,u
 
-os9err0 bcc noerr0
-        clra
-        std _errno,y
-        ldd #-1
-        rts
-noerr0 clra
-        clrb
-        rts
+os9err0
+		lbra	_sysret
     }
 }
 
-asm void
+asm error_code
 _cgfx_curxy(path_id path, int x, int y)
 {
     asm

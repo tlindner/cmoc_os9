@@ -5,7 +5,7 @@
  * Copyright (c) 1989 by Mike Sweet    *
  ***************************************/
 
-asm void
+asm error_code
 _cgfx_dwset(path_id path, int sty, int cpx, int cpy, int szx, int szy, int fprn, int bprn, int bdprn)
 {
 	asm
@@ -39,7 +39,7 @@ d0      ldb 19,s
     }
 }
 
-asm void
+asm error_code
 _cgfx_dwend(path_id path)
 {
 	asm
@@ -57,11 +57,12 @@ _cgfx_dwend(path_id path)
     }
 }
 
-asm void
+asm error_code
 _cgfx_dwprotsw(path_id path)
 {
 	asm
 	{
+_sysret	EXTERNAL
         pshs y
         lbsr _Flush
         lda 7,s
@@ -74,17 +75,11 @@ _cgfx_dwprotsw(path_id path)
         os9 I$Write
         leas 3,s
 os9err0 puls y
-        bcc noerr0
-        clra
-        std _errno,y
-        rts
-noerr0  clra
-        clrb
-        rts
+		lbra	_sysret
     }
 }
 
-asm void
+asm error_code
 _cgfx_owset(path_id path, int svs, int cpx, int cpy, int szx, int szy, int fprn, int bprn)
 {
 	asm
@@ -114,7 +109,7 @@ _cgfx_owset(path_id path, int svs, int cpx, int cpy, int szx, int szy, int fprn,
     }
 }
 
-asm void
+asm error_code
 _cgfx_mvowend(path_id path)
 {
 	asm
@@ -129,7 +124,7 @@ _cgfx_mvowend(path_id path)
      }
 }
 
-asm void
+asm error_code
 _cgfx_owend(path_id path)
 {
 	asm
@@ -147,7 +142,7 @@ o0      ldd #$1b23
     }
 }
 
-asm void
+asm error_code
 _cgfx_select(path_id path)
 {
 	asm
@@ -165,7 +160,7 @@ _cgfx_select(path_id path)
     }
 }        
 
-asm void
+asm error_code
 _cgfx_cwarea(path_id path)
 {
 	asm

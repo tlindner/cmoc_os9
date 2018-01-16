@@ -38,20 +38,3 @@ error_code _os_makdir(char *pathname, int perm);
 error_code _os_seek(path_id path, long position);
 
 error_code _os_ss_attr(char *pathname, int perm);
-
-
-
-/* definitions for _os_gs_keysense() bits */
-#define	_SS_KEYSENSE_SHIFT	(1<<0)
-#define	_SS_KEYSENSE_CTRL	(1<<1)
-#define	_SS_KEYSENSE_ALT	(1<<2)
-#define	_SS_KEYSENSE_UP		(1<<3)
-#define	_SS_KEYSENSE_DOWN	(1<<4)
-#define	_SS_KEYSENSE_LEFT	(1<<5)
-#define	_SS_KEYSENSE_RIGHT	(1<<6)
-#define	_SS_KEYSENSE_SPACE	(1<<7)
-
-error_code _os_gs_keysense(path_id path, int *keys);
-
-error_code _os_ss_keysense(path_id path, int flag);
-
