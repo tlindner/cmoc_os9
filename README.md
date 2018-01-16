@@ -1,9 +1,11 @@
 # CMOC C Library support for OS-9/NitrOS-9
-CMOC is an excellent ANSI C cross-compiler by Pierre Sarrazin. It supports the creation of OS-9 exectuables, which needs a complete C library. [Download it here.](https://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
+CMOC is an excellent ANSI C cross-compiler by Pierre Sarrazin. It supports the creation of OS-9 exectuables, which needs a complete C library. [Download it here](https://perso.b2b2c.ca/~sarrazip/dev/cmoc.html).
 
 This is that C library.
 
 The code for the library is based off of the Kreider C library, with yet-to-be ported files under the lib/todo folder.
+
+Inspiration for the naming and error return conventions for the low-level OS-9 C functions can be found in [this Ultra C document here](http://rab.ict.pwr.wroc.pl/dydaktyka/supwa/os9/MWARE/pdf/ultrac_lib_ref.pdf).
 
 ## Building
 
