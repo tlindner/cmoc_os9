@@ -113,9 +113,51 @@ typedef byte BOOL;
 #define	E$DeadLk        0xFE
 
 /* GetStat/SetStat calls */
-#define	SS_Size		    0x02
-#define	SS_Pos		    0x05
-#define	SS_FD		    0x0F
+#define	SS_Opt          0x00
+#define	SS_Ready        0x01
+#define	SS_Size         0x02
+#define	SS_Reset        0x03
+#define	SS_WTrk         0x04
+#define	SS_Pos          0x05
+#define	SS_EOF          0x06
+#define	SS_Link         0x07
+#define	SS_ULink        0x08
+#define	SS_Feed         0x09
+#define	SS_Frz          0x0A
+#define	SS_SPT          0x0B
+#define	SS_SQD          0x0C
+#define	SS_DCmd         0x0D
+#define	SS_DevNm        0x0E
+#define	SS_FD           0x0F
+#define	SS_Ticks        0x10
+#define	SS_Lock         0x11
+#define	SS_DStat        0x12
+#define	SS_Joy          0x13
+#define	SS_BlkRd        0x14
+#define	SS_BlkWr        0x15
+#define	SS_Reten        0x16
+#define	SS_WFM          0x17
+#define	SS_RFM          0x18
+#define	SS_ELog         0x19
+#define	SS_SSig         0x1A
+#define	SS_Relea        0x1B
+#define	SS_AlfaS        0x1C
+#define	SS_Attr         SS_AlfaS
+#define	SS_Break        0x1D
+#define	SS_RsBit        0x0E
+#define	SS_FDInf        0x20
+#define	SS_DirEnt       SD.FDInf
+#define	SS_SetMF        0x24
+#define	SS_Cursr        0x25
+#define	SS_ScSiz        0x26
+#define	SS_KySns        0x27
+#define	SS_ComSt        0x28
+#define	SS_Open         0x29
+#define	SS_Close        0x2A
+#define	SS_HngUp        0x2B
+#define	SS_FSig         0x2C
+#define	SS_DSize        SS_ScSiz
+#define	SS_VarSect      SS_DStat
 
 error_code _os9_sleep(int *ticks);
 

@@ -524,7 +524,12 @@ int main(int argc, char **argv)
     _cgfx_palette(outpath, MAZEGROUND, MAZEPAL);
     _cgfx_select(outpath);
 
-    while (1)
+	// turn on key sensing (VTIO supported)
+	_os_ss_keysense(outpath, 1);
+
+	// keys are mapped as per https://nitros9.sourceforge.io/wiki/index.php/SS.KySns_Get_Status	
+	int keys;
+    while ((_os_gs_keysense(outpath, &keys) == 0) && ((keys & _SS_KEYSENSE_SPACE) == 0x00)/* spacebar not hit */)
     {
         rndseed = time();
         srand((unsigned)rndseed);
@@ -538,6 +543,9 @@ int main(int argc, char **argv)
         xoffset_count = (xoffset_count + XINCR_OFFSET) % XWOBBLE;
         yoffset_count = (yoffset_count + YINCR_OFFSET) % YWOBBLE;
     }
+
+	// turn off key sensing (not really needed since we're closing outpath)
+	_os_ss_keysense(outpath, 0);
 
 	_os_close(outpath);
 	    
