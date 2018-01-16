@@ -12,7 +12,7 @@ _write EXTERNAL
 }
 
 asm error_code
-_cgfx_lset(path_id path, int grpnum, int bufnum)
+_cgfx_lset(path_id path, int mode)
 {
     asm
     {

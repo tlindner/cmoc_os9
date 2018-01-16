@@ -58,7 +58,7 @@ _cgfx_dwend(path_id path)
 }
 
 asm error_code
-_cgfx_dwprotsw(path_id path)
+_cgfx_dwprotsw(path_id path, int bsw)
 {
 	asm
 	{
@@ -161,7 +161,7 @@ _cgfx_select(path_id path)
 }        
 
 asm error_code
-_cgfx_cwarea(path_id path)
+_cgfx_cwarea(path_id path, int cpx, int cpy, int szx, int szy)
 {
 	asm
 	{
