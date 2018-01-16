@@ -81,7 +81,8 @@ static struct {
 
 static unsigned int sqnum, cur_sq_x, cur_sq_y, path_length;
 static unsigned int start_x, start_y, start_dir, end_x, end_y, end_dir;
-static unsigned int outpath, xoffset_count, yoffset_count;
+static path_id outpath;
+static unsigned int xoffset_count, yoffset_count;
 static long rndseed;
 
 int time()
@@ -509,15 +510,12 @@ int main(int argc, char **argv)
     xoffset_count = 0;
     yoffset_count = 4;
 
-    path_id outpath;
     if (_os_open("/w", FAM_READ | FAM_WRITE, &outpath) != 0)
     {
        exit(193);
     }
 
-    _cgfx_dwset(outpath, 6, 0, 0, 40, Y_MAZE_SIZE + 1,
-                BACKGROUND, BACKGROUND, BACKGROUND);
-
+    _cgfx_dwset(outpath, 6, 0, 0, 40, Y_MAZE_SIZE + 1, BACKGROUND, BACKGROUND, BACKGROUND);
     _cgfx_curoff(outpath);
     _cgfx_scalesw(outpath, 1);
     _cgfx_palette(outpath, BACKGROUND, BACKPAL);
@@ -540,6 +538,8 @@ int main(int argc, char **argv)
         xoffset_count = (xoffset_count + XINCR_OFFSET) % XWOBBLE;
         yoffset_count = (yoffset_count + YINCR_OFFSET) % YWOBBLE;
     }
-    
+
+	_os_close(outpath);
+	    
     return 0;
 } /*  end of main() */

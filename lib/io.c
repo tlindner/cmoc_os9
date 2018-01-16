@@ -73,7 +73,7 @@ _os_open(char *pathname, int mode, path_id *path)
 		pshs	d
 		tfr		a,b
 		clra
-		std		[6,s]
+		std		[6+2,s]
 		puls	d
 		lbra	_sysret
     }
