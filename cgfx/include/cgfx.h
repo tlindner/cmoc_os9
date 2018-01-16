@@ -209,23 +209,24 @@ error_code _cgfx_putblk(path_id path, int grp, int buf, int bx, int by);
 
 
 /**** MULTI-VUE FUNCTIONS ****/
-#define MNENBL 1
-#define MNDSBL 0
-#define WINSYNC 0xc0c0
+
+#define MNENBL 		1
+#define MNDSBL 		0
+#define WINSYNC 	0xc0c0
 
 /* default menu id's */
-#define MN_MOVE 1
-#define MN_CLOS 2
-#define MN_GROW 3
-#define MN_USCRL 4
-#define MN_DSCRL 5
-#define MN_RSCRL 6
-#define MN_LSCRL 7
-#define MN_TNDY 20
-#define MN_FILE 21
-#define MN_EDIT 22
-#define MN_STYL 23
-#define MN_FONT 24
+#define MN_MOVE 	1
+#define MN_CLOS 	2
+#define MN_GROW 	3
+#define MN_USCRL 	4
+#define MN_DSCRL 	5
+#define MN_RSCRL 	6
+#define MN_LSCRL 	7
+#define MN_TNDY 	20
+#define MN_FILE 	21
+#define MN_EDIT 	22
+#define MN_STYL 	23
+#define MN_FONT 	24
 
 /* window - menu data structures */
 typedef struct mistr {  /* menu item descriptor */
@@ -261,3 +262,24 @@ error_code _cgfx_gs_mnsel(path_id path, int *itemno);
 error_code _cgfx_ss_umbar(path_id path);
 
 error_code _cgfx_ss_sbar(path_id path, int horbar, int verbar);
+
+
+/**** STATUS FUNCTIONS ****/
+
+error_code _cgfx_gs_crsr(path_id path, int *x, int *y);
+ 
+error_code _cgfx_gs_scsz(path_id path, int *x, int *y);
+
+error_code _cgfx_gs_palt(path_id path, char *palbuf);
+
+error_code _cgfx_ss_mgpb(path_id path, int grpnum, int bufnum, int mapflag, int *size, char *bufaddr);
+
+error_code _cgfx_gs_styp(path_id path, int *type);
+
+error_code _cgfx_gs_fbrg(path_id path, int *fore, int *back, int *bord);
+
+error_code _cgfx_ss_gip(path_id path, int msres, int msport, int kbdstrt, int kbdrpt);
+
+error_code _cgfx_ss_dfpl(path_id path, char *palbuf);
+
+error_code _cgfx_ss_mtyp(path_id path, int montype);
