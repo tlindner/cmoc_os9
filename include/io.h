@@ -37,4 +37,4 @@ error_code _os_makdir(char *pathname, int perm);
 
 error_code _os_seek(path_id path, long position);
 
-error_code _os_ss_attr(path_id path, int perm);
+error_code _os_ss_attr(char *pathname, int perm);
