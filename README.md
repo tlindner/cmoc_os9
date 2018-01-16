@@ -1,9 +1,11 @@
 # CMOC C Library support for OS-9/NitrOS-9
-CMOC is an excellent ANSI C cross-compiler by Pierre Sarrazin. It supports the creation of OS-9 exectuables, which needs a complete C library. [Download it here](https://perso.b2b2c.ca/~sarrazip/dev/cmoc.html).
+CMOC is an excellent ANSI C cross-compiler by Pierre Sarrazin. It supports the creation of OS-9 exectuables, which needs a complete C library. [Download CMOC here](https://perso.b2b2c.ca/~sarrazip/dev/cmoc.html).
 
-This is that C library.
+This project aims to deliver two libraries: the standard C library (libc.a) and the CGFX library (libcgfx.a).
 
-The code for the library is based off of the Kreider C library, with yet-to-be ported files under the lib/todo folder.
+The code for the standard C library is based off of the Kreider C library, with yet-to-be ported files under the lib/todo folder.
+
+Likewise, the code for the CGFX library is based off of Mike Sweet's CGFX7 library, with yet-to-be ported files under the cgfx/todo folder.
 
 Inspiration for the naming and error return conventions for the low-level OS-9 C functions can be found in [this Ultra C document here](http://rab.ict.pwr.wroc.pl/dydaktyka/supwa/os9/MWARE/pdf/ultrac_lib_ref.pdf).
 
@@ -16,6 +18,7 @@ To make the libc.a C library, type:
 ```
 cd cmoc_os9
 cd lib; make
+cd ../cgfx; make
 ```
 
 From there, you can build the unit tests:

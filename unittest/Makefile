@@ -1,13 +1,13 @@
 CC = cmoc
 OS9FLAGS = --os9
 OPT = -O2
-LFLAGS = -I../include $(OS9FLAGS)
+LFLAGS = -I../include -I../cgfx/include $(OS9FLAGS)
 
 %: %.c
-	$(CC) $(LFLAGS) $^ $(OBJS) -L../lib -lc
+	$(CC) $(LFLAGS) $^ $(OBJS) -L../lib -lc -L../cgfx -lcgfx
 
 
-TESTS	= timetest iotest syscalltest memtest
+TESTS	= timetest iotest syscalltest memtest wintest
 
 all:	$(TESTS)
 
@@ -22,11 +22,14 @@ dsk:	all
 	os9 attr test.dsk,CMDS/syscalltest -epe
 	os9 copy memtest test.dsk,CMDS
 	os9 attr test.dsk,CMDS/memtest -epe
+	os9 copy wintest test.dsk,CMDS
+	os9 attr test.dsk,CMDS/wintest -epe
 	echo "chx /d1/cmds; chd /d1" > go
 	echo "iotest" >> go
 	echo "timetest" >> go
 	echo "syscalltest" >> go
 	echo "memtest" >> go
+	echo "wintest" >> go
 	os9 copy -l go test.dsk,
 
 

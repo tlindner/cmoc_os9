@@ -13,10 +13,30 @@ typedef unsigned char byte;
 typedef byte BOOL;
 
 /* System calls */
-#define F$ID		0x0C
-#define F$Time		0x15
-#define F$STime		0x16
-
+#define F$Link          0x00
+#define F$Load          0x01
+#define F$UnLink        0x02
+#define F$Fork          0x03
+#define F$Wait          0x04
+#define F$Chain         0x05
+#define F$Exit          0x06
+#define F$Mem           0x07
+#define F$Send          0x08
+#define F$Icpt          0x09
+#define F$Sleep         0x0A
+#define F$SSpd          0x0B
+#define F$ID            0x0C
+#define F$SPrior        0x0D
+#define F$SSWI          0x0E
+#define F$PErr          0x0F
+#define F$PrsNam        0x10
+#define F$CmpNam        0x11
+#define F$SchBit        0x12
+#define F$AllBit        0x13
+#define F$DelBit        0x14
+#define F$Time          0x15
+#define F$STime         0x16
+#define F$CRC           0x17
 
 /* I/O system calls */
 #define	I$Attach	    0x80
@@ -96,6 +116,8 @@ typedef byte BOOL;
 #define	SS_Size		    0x02
 #define	SS_Pos		    0x05
 #define	SS_FD		    0x0F
+
+error_code _os9_sleep(int *ticks);
 
 
 typedef struct _registers_6809 {
