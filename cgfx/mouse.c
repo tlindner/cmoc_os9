@@ -35,14 +35,14 @@ _cgfx_ss_mssig(path_id path, int signo)
 }
 
 asm error_code
-_cgfx_gs_mouse(path_id path, void *mpkt, int port)
+_cgfx_gs_mouse(path_id path, MSRET *mpkt)
 {
     asm
     {
 		pshs 	y
 		ldx 	2+2+2,s		get mouse packet pointer
 		lda 	2+2+1,s		get path
-		ldy 	2+2+4,s		get port
+		ldy 	2+2+4,s		NOT SURE WHAT THIS IS!
 		ldb 	#SS_Mouse
 		os9 	I$GetStt
 		puls	y

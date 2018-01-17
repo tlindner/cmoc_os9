@@ -50,7 +50,7 @@ _cgfx_gs_palt(path_id path, char *palbuf)
 }
 
 asm error_code
-_cgfx_ss_mgpb(path_id path, int grpnum, int bufnum, int mapflag, int *size, char *bufaddr)
+_cgfx_ss_mgpb(path_id path, int grp, int buf, int mapsw, int *size, char *bufaddr)
 {
     asm
     {
