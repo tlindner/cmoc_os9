@@ -881,6 +881,17 @@ typedef struct wnstr {  	/* window descriptor */
 	struct mnstr *_wnmen;  	/* pointer to menu descriptor's array */
 } WNDSCR;
 
+typedef struct {
+	char *i_name; 			/* name of this menu item */
+	char i_enabled; 		/* TRUE if this item is enabled */
+	char (*i_func)(); 		/* pointer to function to call if this item selected */
+} ITEM;
+
+#define MN_DSBL 	0
+#define MN_ENBL 	1
+#define MN_FUNC 	1 /* call a function */
+#define MN_SUBMN 	2 /* sub-menu */
+
 /**
  * @brief Sets the current window type.
  *
@@ -1036,3 +1047,48 @@ error_code _cgfx_ss_dfpl(path_id path, char *palbuf);
  * @return 0 if successful, otherwise the error code.
  */
 error_code _cgfx_ss_mtyp(path_id path, int montype);
+
+
+/**** ADDED EXTRAS FROM MIKE SWEET ****/
+
+typedef struct { 	/* dialog structure */
+	char d_type;    /* type- 0=string, 1=button */
+	char d_column;  /* column position within the overlay */
+	char d_row;     /* row within the overlay */
+	char d_key;     /* key assocated with this button (0 for none) */
+	char d_val;     /* value to return to caller */
+	char *d_string; /* pointer to actual string to be placed in overlay */
+} DIALOG;        	/* call this type DIALOG */
+
+
+/* now for some define constants for the 'd_type' field... */
+#define D_TEXT 		0 	/* ASCII text */
+#define D_KEY 		1   /* key-binding */
+#define D_STRING 	2 	/* ASCII string box (accepts text) */
+#define D_BUTTON 	3 	/* 3-D text button */
+#define D_RADIO 	4  	/* Radio button (where d_string should be NULL)*/
+#define D_END 		-1  /* End marker of array */
+
+
+typedef struct OBJSTR {
+	char group;          /* G/P group for this object */
+	char buffer;         /* G/P buffer for this object */
+	int xcor;            /* xcor * 32 */
+	int ycor;            /* ycor * 32 */
+	int deltax;          /* +/- xcor */
+	int deltay;          /* +/- ycor */
+	int xaccel;          /* xcor acceleration */
+	int yaccel;          /* ycor acceleration */
+	int (*border)();     /* function to call to check boundaries */
+	struct OBJSTR *next; /* pointer to next object */
+	struct OBJSTR *prev; /* pointer to previous object */
+} OBJECT;   	         /* call this type OBJECT */
+
+extern OBJECT *Objects; /* pointer to OBJECT list */
+
+/* polygon vertex data structure */
+typedef struct {
+	int p_xcor;
+	int p_ycor;
+} VERTEX;
+ 
