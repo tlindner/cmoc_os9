@@ -1,7 +1,7 @@
 # Makefile to create assembler library
 #include $(NITROS9DIR)/rules.mak
 
-MEM = mem.o memory.o memchr.o # memccpy.o memcmp.o memset.o memcpy.o memchr.o
+MEM = mem.o memory.o memchr.o memccpy.o memcmp.o memset.o memcpy.o memchr.o
 SYS = sleep.o
 MISC = rpterr.o cfinish.o tidyup.o chcodes.o htoi.o htol.o #rand.o
 MATH_SUPPORT = ccmult.o ccdiv.o ccmod.o atoi.o abs.o
