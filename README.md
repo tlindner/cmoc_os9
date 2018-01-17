@@ -84,11 +84,12 @@ Microware moved to a more uniform method of function usage in [their Ultra C com
 
 There are several differences in this code:
 
-1. The functions are prepended with '_os_'
-2. The return value for the functions are reserved for the error -- no needing to pull the error out of errno.
-3. The sane values that were being returned in the result of the function are now passed by reference.
+1. Types are declared with more formal names (e.g. pathid instead of int)
+2. The functions are prepended with '_os_'
+3. The return value for the functions are reserved for the error -- no needing to pull the error out of errno.
+4. The sane values that were being returned in the result of the function are now passed by reference.
 
-This is arguably a cleaner, more consistent approach to using the low-level I/O and other system calls, and is the path being pursued in the creation of this library.
+While passing parameters by reference may be a bit more typing, this is arguably a cleaner, more consistent approach to using the low-level I/O and other system calls, and is the path being pursued in the creation of this library.
 
 ## Work to be done
 
