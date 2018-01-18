@@ -6,6 +6,7 @@ _cgfx_ss_wnset(path_id path, int wintype, WNDSCR *windat)
     asm
     {
 _Flush	EXTERNAL
+_os9ret	EXTERNAL
 		pshs	y
 		lbsr	_Flush
 		lda		2+2+1,s			get path
