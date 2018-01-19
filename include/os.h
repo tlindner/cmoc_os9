@@ -2,7 +2,7 @@
  * os.h - OS-9/NitrOS-9 Definitions
  */
 
-#include <cmoc.h>
+//#include <cmoc.h>
 
 extern int errno;
 

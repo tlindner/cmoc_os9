@@ -19,6 +19,7 @@ _mtop EXTERNAL
 _stbot EXTERNAL
 
 sbrk EXPORT
+ibrk EXPORT
 
 sbrk: ldd   memend,y 
  pshs  d 

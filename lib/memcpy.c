@@ -1,4 +1,5 @@
-#include <mem.h>
+#include <stdlib.h>
+#include <string.h>
 
 asm void *
 memcpy(void *dst, void *src, size_t len)

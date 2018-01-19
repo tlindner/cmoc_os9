@@ -1,4 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <os.h>
+#include <string.h>
 
 void test_writeln_syscall()
 {

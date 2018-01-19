@@ -1,4 +1,5 @@
-#include <mem.h>
+#include <stdlib.h>
+#include <string.h>
 
 asm void *
 memchr(void *data, int c, size_t len)

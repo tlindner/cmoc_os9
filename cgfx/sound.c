@@ -1,10 +1,5 @@
 #include <cgfx.h>
 
-/* Sound a tone through the speaker for
- * 'duration' ticks at specified frequency
- * (0-4095) and volume (0-63).  Frequency
- * is not actual, but relative.(<> Hz)
- */
 asm error_code
 _cgfx_ss_tone(path_id path, int duration, int volume, int frequency)
 {
