@@ -543,32 +543,32 @@ L048f ror   ,u
  com   D0027,u 
  com   D0028,u 
  rts    
-L04a7 puls  d 
- pshs  u 
- leas  -30,s 
- tfr   s,u 
- pshs  d 
+L04a7 puls  d 		get return address
+ pshs  u 		save U
+ leas  -30,s 		allocate 30 bytes
+ tfr   s,u 		transfer stack to U
+ pshs  d 		save return address
  clr   D001d,u 
- ldd   6,x 
- std   D0016,u 
- ldd   4,x 
- std   D0014,u 
- ldd   2,x 
- std   D0012,u 
- ldd   ,x 
- stb   D0011,u 
- tfr   a,b 
- sta   D001c,u 
- ora   #$80 
- sta   D0010,u 
- eorb  D0022,u 
- stb   D0019,u 
- lda   D0022,u 
- sta   D0018,u 
- ora   #$80 
- sta   D0022,u 
- lda   D0029,u 
- rts    
+ ldd   6,x 		get bits 15-0 of double
+ std   D0016,u 		store on stack
+ ldd   4,x 		get bits 31-16 of double
+ std   D0014,u 		store on stack
+ ldd   2,x 		get bits 47-32 of double
+ std   D0012,u		store on stack
+ ldd   ,x 		get bits 63-48 of double
+ stb   D0011,u 		store bits 55-48 on stack
+ tfr   a,b 		copy A into B
+ sta   D001c,u 		store bits 63-56 on stack
+ ora   #$80 		get sign bit
+ sta   D0010,u 		store here
+ eorb  D0022,u 		XOR B with this location
+ stb   D0019,u 		store it
+ lda   D0022,u 		get byte here
+ sta   D0018,u 		store it
+ ora   #$80 		get sign bit
+ sta   D0022,u 		store it
+ lda   D0029,u 		get byte
+ rts    		return
  leax  D0022,u 
 L04eb lda   #$a0 
  sta   7,x 
@@ -825,21 +825,40 @@ _fmove: pshs  u
  ldd   2,u 
  std   2,x 
  bra   L0726 
+
+* move double
+* entry: 
+* X   = address of src - 8 byte double 
+* 2,s = address of destination
 _dmove: pshs  u 
- ldu   4,s 
- exg   x,u 
- ldd   ,u 
- std   ,x 
- ldd   2,u 
- std   2,x 
- ldd   4,u 
- std   4,x 
- ldd   6,u 
- std   6,x 
-L0726 puls  u 
- puls  d 
- std   ,s 
+ ldu   2+2,s 		get ptr to double in U
+ exg   x,u 		swap so that U points to src, X points to destination
+ ldd   ,u 		get 2 bytes from src
+ std   ,x 		save it
+ ldd   2,u 		get next 2 bytes from src
+ std   2,x 		save it
+ ldd   4,u 		get next 2 bytes from src
+ std   4,x 		save it
+ ldd   6,u 		get next 2 bytes from src
+ std   6,x 		save it
+L0726 puls  u 		recover U pushed earlier
+ puls  d 		get return address off stack
+ std   ,s 		save back and return
  rts    
+
+; Input: D = Address of packed single-precision real to use as source.
+;        X = Address of location to be initialized, of type XXX.
+initSingleFromSingle
+	pshs	d,u
+	ldd	0,u
+	std	0,x
+	ldd	2,u
+	std	2,x
+	puls	d,u,pc
+
+addSingleSingle EXPORT
+addSingleSingle
+	rts
 
  endsect  
 

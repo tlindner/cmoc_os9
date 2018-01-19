@@ -2,12 +2,11 @@
  * pffinit.c - Source for COCO print routines for floats                    *
  * ************************************************************************ */
 
-#include <ctype.h>
 #include <stdio.h>
 
 extern double scale ();
 
-static direct char D0000;
+static char D0000;
 
 static char B0000;
 static char B0001[29];
@@ -54,16 +53,12 @@ static char G0000[] = {
 
 /* dummy function to include this ROF */
 
-pffinit ()
+void pffinit ()
 {
     return;
 }
 
-pffloat (parm1, parm2, parm3, parm4)
-    int parm1;
-    int parm2;
-    double **parm3;
-    int parm4;
+void pffloat (int parm1, int parm2, double **parm3, int parm4)
 {
     int pfv0;
 
@@ -85,12 +80,7 @@ pffloat (parm1, parm2, parm3, parm4)
     L0064 ((*parm3)++, parm2, pfv0, _chcodes [parm1] & 2);
 }
 
-L0064 (parm1, parm2, parm3, parm4, parm5)
-    double *parm1;
-    int parm2;
-    int parm3;
-    int parm4;
-    int parm5;
+void L0064 (double *parm1, int parm2, int parm3, int parm4, int parm5)
 {
     char *var30;
     int var28;

@@ -7,7 +7,7 @@ LFLAGS = -I../include -I../cgfx/include $(OS9FLAGS)
 	$(CC) $(LFLAGS) $^ $(OBJS) -L../lib -lc -L../cgfx -lcgfx
 
 
-TESTS	= timetest fiotest iotest syscalltest memtest wintest maze
+TESTS	= timetest fiotest iotest syscalltest memtest wintest floattest maze
 
 all:	$(TESTS)
 
@@ -28,6 +28,8 @@ dsk:	all
 	os9 attr test.dsk,CMDS/wintest -epe
 	os9 copy maze test.dsk,CMDS
 	os9 attr test.dsk,CMDS/maze -epe
+	os9 copy floattest test.dsk,CMDS
+	os9 attr test.dsk,CMDS/floattest -epe
 	echo "chx /d1/cmds; chd /d1" > go
 	echo "iotest" >> go
 	echo "timetest" >> go
