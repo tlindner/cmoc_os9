@@ -69,6 +69,8 @@
 #define WRNGGROUND      2
 #define BACKGROUND      3
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <cgfx.h>
 //#include <utime.h>
 

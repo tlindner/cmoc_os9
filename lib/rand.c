@@ -1,22 +1,16 @@
 #include <os.h>
 
+unsigned char G0000[4] = { 0, 0, 0, 0 };
+
 asm int
 rand(void)
 {
 	asm
 	{
-        section bss
-
-* Initialized Data (class G)
-G0000   fcb $00 
-        fcb $00 
-        fcb $00 
-        fcb $01 
-
-        endsect
-
+_lmul	EXTERNAL
+_ladd	EXTERNAL
         pshs  u 
-        leax  G0000,y 
+        leax  _G0000,y 
         ldd   ,x 
         ldu   2,x 
         pshs  d,u 
@@ -27,7 +21,7 @@ G0000   fcb $00
         pshs  d,u 
         leax  >L0041,pcr 
         lbsr  _ladd 
-        leau  G0000,y 
+        leau  _G0000,y 
         ldd   ,x 
         ldx   2,x 
         std   ,u 
@@ -42,7 +36,7 @@ srand(unsigned int seed)
 {
 	asm
 	{
-        leax  G0000,y 
+        leax  _G0000,y 
         ldd   2,s 
         std   2,x 
         clra   

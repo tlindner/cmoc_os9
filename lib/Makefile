@@ -4,7 +4,7 @@
 MEM = mem.o memory.o memchr.o memccpy.o memcmp.o memset.o memcpy.o memchr.o
 SYS = sleep.o
 IO = printf.o putc.o iob_data.o setbase.o fseek.o
-MISC = rpterr.o cfinish.o tidyup.o chcodes.o htoi.o htol.o #rand.o
+MISC = rpterr.o cfinish.o tidyup.o chcodes.o htoi.o htol.o rand.o
 MATH_SUPPORT = ccmult.o ccdiv.o ccmod.o atoi.o abs.o
 FLOAT_SUPPORT = fcommon.o cfloats.o atof.o scale.o
 LONG_SUPPORT = clcommon.o clcompare.o clconvert.o claddsub.o clbits.o cldiv.o clmove.o clnegcompl.o clincdec.o clmul.o clshifts.o atol.o

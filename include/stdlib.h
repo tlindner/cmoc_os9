@@ -1,4 +1,6 @@
 typedef int size_t;
+int rand(void);
+void srand(unsigned seed);
 extern int errno;
 int exit(int status);
 float    atof();
