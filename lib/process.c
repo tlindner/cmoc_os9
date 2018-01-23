@@ -75,7 +75,10 @@ _os_fork(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int 
         ldy   4+4,s         get parameter size (in pages)
         ldu   4+6,s         get address of parameters
         lda   4+8+1,s       get lang byte
-// BUG? shouldn't we be shifting A four bytes left here???? Like above in _os_chain???
+        asla                shift over 4 bits
+        asla   
+        asla   
+        asla   
         ora   4+10+1,s      OR with type byte
         ldb   4+12+1,s      get size of data area (in pages)
         os9   F$Fork        fork
