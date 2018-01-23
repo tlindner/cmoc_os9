@@ -6,6 +6,10 @@ extern int errno;
 
 typedef int error_code;
 
+/* These probably need to go into cmoc.h */
+typedef unsigned char byte;
+typedef byte BOOL;
+
 /* System calls */
 #define F$Link          0x00
 #define F$Load          0x01
@@ -213,3 +217,10 @@ error_code _os_getpid(int *pid);
 error_code _os_getuid(int *uid);
 error_code _os_asetuid(int uid);
 error_code _os_setuid(int uid);
+
+
+error_code _os_send(int pid, int sig);
+error_code _os_wait(int *pid);
+error_code _os_setpr(int pid, int priority);
+error_code _os_chain(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int datasize);
+error_code _os_fork(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int datasize, int *pid);
