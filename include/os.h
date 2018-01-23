@@ -2,15 +2,9 @@
  * os.h - OS-9/NitrOS-9 Definitions
  */
 
-//#include <cmoc.h>
-
 extern int errno;
 
 typedef int error_code;
-
-/* These probably need to go into cmoc.h */
-typedef unsigned char byte;
-typedef byte BOOL;
 
 /* System calls */
 #define F$Link          0x00
@@ -37,6 +31,18 @@ typedef byte BOOL;
 #define F$Time          0x15
 #define F$STime         0x16
 #define F$CRC           0x17
+
+/* Level 2 system calls */
+#define F$GPrDsc        0x18        // Get Process Descriptor copy
+#define F$GBlkMp        0x19        // Get System Block Map copy
+#define F$GModDr        0x1A        // Get Module Directory copy
+#define F$CpyMem        0x1B        // Copy External Memory
+#define F$SUser         0x1C        // Set User ID number
+#define F$UnLoad        0x1D        // Unlink Module by name
+#define F$Alarm         0x1E        // Color Computer 3 Alarm Call
+                                    // Reserved - For overlap of other systems
+#define F$NMLink        0x21        // Color Computer 3 Non-Mapping Link
+#define F$NMLoad        0x22        // Color Computer 3 Non-Mapping Load
 
 /* I/O system calls */
 #define	I$Attach	    0x80
@@ -202,3 +208,8 @@ typedef struct _registers_6809 {
 error_code _os_syscall(int callcode, registers_6809 *registers);
 
 int abs(int value);
+
+error_code _os_getpid(int *pid);
+error_code _os_getuid(int *uid);
+error_code _os_asetuid(int uid);
+error_code _os_setuid(int uid);
