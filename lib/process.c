@@ -44,7 +44,7 @@ _os_setpr(int pid, int priority)
 }
     
 asm error_code
-_os_chain(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int datasize)
+_os_chain(void *modaddr, int paramsize, void *paramaddr, int type, int lang, int datasize)
 {
     asm
     {
@@ -52,12 +52,12 @@ _os_chain(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int
         leas  255,y         allocate on stack
         ldx   2,u           get module address
         ldy   2+2,u         get parameter size (in pages)
-        lda   2+6+1,u       get language byte
+        lda   2+6+1,u       get type byte
         asla                shift over 4 bits
         asla   
         asla   
         asla   
-        ora   2+9,u         OR with type byte
+        ora   2+9,u         OR with language byte
         ldb   2+11,u        get size of data area (in pages)
         ldu   2+4,u         get address of parameters
         os9 F$Chain 
@@ -66,7 +66,7 @@ _os_chain(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int
 }
 
 asm error_code
-_os_fork(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int datasize, int *pid)
+_os_fork(void *modaddr, int paramsize, void *paramaddr, int type, int lang, int datasize, int *pid)
 {
     asm
     {
@@ -74,19 +74,19 @@ _os_fork(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int 
         ldx   4+2,s         get module address
         ldy   4+4,s         get parameter size (in pages)
         ldu   4+6,s         get address of parameters
-        lda   4+8+1,s       get lang byte
+        lda   4+8+1,s       get type byte
         asla                shift over 4 bits
         asla   
         asla   
         asla   
-        ora   4+10+1,s      OR with type byte
+        ora   4+10+1,s      OR with language byte
         ldb   4+12+1,s      get size of data area (in pages)
         os9   F$Fork        fork
         puls  y,u           recover stack
         lblo  _os9err       branch if error
         tfr   a,b 
         clra                put PID in D
-        std   [4+14,s]      save off PID to out parameter
+        std   [14,s]        save off PID to out parameter
         lbra  _sysret
     }
 }

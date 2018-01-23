@@ -201,6 +201,82 @@ typedef byte BOOL;
 #define	SS_FndBf        0x9B	// Find named buffer (L2V3)
 
 
+/**************************
+ * Module Field Definitions
+ *
+ * ID Field - First two bytes of a NitrOS-9 module
+ */
+#define	M$ID1           0x87    // Module ID code byte one
+#define	M$ID2           0xCD    // Module ID code byte two
+#define	M$ID12         M$ID1*256+M$ID2
+
+/*
+ * Module Type/Language Field Masks
+ */
+#define	TypeMask        0b11110000  // Type Field
+#define	LangMask        0b00001111  // Language Field
+
+/*
+ * Module Type Values
+ */
+#define	Devic           0xF0    // Device Descriptor Module
+#define	Drivr           0xE0    // Physical Device Driver
+#define	FlMgr           0xD0    // File Manager
+#define	Systm           0xC0    // System Module
+#define	ShellSub        0x50    // Shell+ shell sub module
+#define	Data            0x40    // Data Module
+#define	Multi           0x30    // Multi-Module
+#define	Sbrtn           0x20    // Subroutine Module
+#define	Prgrm           0x10    // Program Module
+
+/*
+ * Module Language Values
+ */
+#define	Objct           0x01    // 6809 Object Code Module
+#define	ICode           0x02    // Basic09 I-code
+#define	PCode           0x03    // Pascal P-code
+#define	CCode           0x04    // C I-code
+#define	CblCode         0x05    // Cobol I-code
+#define	FrtnCode        0x06    // Fortran I-code
+#define	Obj6309         0x07    // 6309 object code
+
+/*
+ * Module Attributes / Revision byte
+ *
+ * Field Masks
+ */
+#define	AttrMask        0b11110000  // Attributes Field
+#define	RevsMask        0b00001111  // Revision Level Field
+
+/*
+ * Attribute Flags
+ */
+#define	ReEnt           0b10000000  // Re-Entrant Module
+#define	ModProt         0b01000000  // Gimix Module protect bit (0=protected, 1=write enable)
+#define	ModNat          0b00100000  // 6309 native mode attribute
+
+/********************
+ * Device Type Values
+ *
+ * These values define various classes of devices, which are
+ * managed by a file manager module.  The Device Type is embedded
+ * in a device's device descriptor.
+ */
+#define	DT_SCF          0x00    // Sequential Character File Manager
+#define	DT_RBF          0x01    // Random Block File Manager
+#define	DT_Pipe         0x02    // Pipe File Manager
+#define	DT_SBF          0x03    // Sequential Block File Manager
+#define	DT_NFM          0x04    // Network File Manager
+#define	DT_CDFM         0x05    // CD-ROM File Manager
+#define	DT_RFM          0x06    // Remote File Manager
+
+/*********************
+ * CRC Result Constant
+ */
+#define	CRCCon1         0x0080
+#define	CRCCon23        0x0FE3
+
+
 error_code _os9_sleep(int *ticks);
 
 
@@ -224,3 +300,7 @@ error_code _os_wait(int *pid);
 error_code _os_setpr(int pid, int priority);
 error_code _os_chain(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int datasize);
 error_code _os_fork(void *modaddr, int paramsize, void *paramaddr, int lang, int type, int datasize, int *pid);
+
+error_code _os_modlink(char *modname, int lang, int type, void **modaddr);
+error_code _os_modload(char *modname, int lang, int type, void **modaddr);
+error_code _os_modunlink(void *modaddr);
