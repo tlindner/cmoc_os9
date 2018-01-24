@@ -306,6 +306,38 @@ error_code _os_modload(char *modname, int lang, int type, void **modaddr);
 error_code _os_modunlink(void *modaddr);
 
 /*
+A storage area is allocated by OS-9 when the C program is executed. The layout of this memory is as follows:
+
+                 high addresses
+              |                  | <- sbrk() adds more memory here
+              |                  |
+              |                  |
+              |------------------| <- memend
+              |    parameters    |
+              |------------------|
+              |                  |
+Current stack |      stack       | <- SP register
+reservation ->|..................|
+              |        v         |
+              |                  | <- standard I/O buffers allocated here
+              |    free memory   |
+Current top              |                  |
+of data     ->|........^.........| <- ibrk() changes this memory bound upward
+              |                  |
+              | requested memory |
+              |------------------| <- end
+              |  uninitialized   |
+              |       data       |
+              |------------------| <- edata
+              |   initialized    |
+              |       data       |
+              |------------------|
+              |    direct page   |
+   dpsiz      |     variables    |
+     v        +------------------+ <- Y, DP registers
+                  low address
+ */
+/*
  * Request an allocation from free memory and returns a pointer to its base.
  */
 void *sbrk(int increase);
