@@ -6,7 +6,7 @@ setbase(FILE *stream)
 {
     asm
     {
-ibrk	    EXTERNAL
+_ibrk	    EXTERNAL
 _getstat	EXTERNAL
 
 * Sets up FILE structure
@@ -43,7 +43,7 @@ L003c       ldd   2,u
             bne   L0051 
             ldd   11,u 
             pshs  d 
-            lbsr  ibrk 
+            lbsr  _ibrk 
             leas  2,s 
             std   2,u 
             cmpd  #-1 
