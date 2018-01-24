@@ -321,7 +321,7 @@ reservation ->|..................|
               |        v         |
               |                  | <- standard I/O buffers allocated here
               |    free memory   |
-Current top              |                  |
+Current top   |                  |
 of data     ->|........^.........| <- ibrk() changes this memory bound upward
               |                  |
               | requested memory |
