@@ -304,3 +304,14 @@ error_code _os_fork(void *modaddr, int paramsize, void *paramaddr, int lang, int
 error_code _os_modlink(char *modname, int lang, int type, void **modaddr);
 error_code _os_modload(char *modname, int lang, int type, void **modaddr);
 error_code _os_modunlink(void *modaddr);
+
+/*
+ * Request an allocation from free memory and returns a pointer to its base.
+ */
+void *sbrk(int increase);
+
+/*
+ * Request from inside the initial memory allocation.
+ */
+void *ibrk(int increase);
+void *unbrk(int increase);
