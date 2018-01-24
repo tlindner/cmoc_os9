@@ -277,6 +277,14 @@ typedef byte BOOL;
 #define	CRCCon23        0x0FE3
 
 
+/**
+ * @brief Put the process to sleep.
+ *
+ * @param ticks Address of the variable containing the number of ticks to sleep.
+ * This is an in/out parameter. The value of the variable must be set to the number of
+ * ticks to sleep. Upon return, the number of ticks left is placed in that same location.
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _os9_sleep(int *ticks);
 
 
@@ -285,6 +293,13 @@ typedef struct _registers_6809 {
     int  x, y, u, s;
 } registers_6809;
 
+/**
+ * @brief Perform a system call.
+ *
+ * @param callcode 
+ * @param registers Address of the structure containing the 6809 registers. 
+ * @return 0 if successful, otherwise the error code.
+ */
 error_code _os_syscall(int callcode, registers_6809 *registers);
 
 int abs(int value);
