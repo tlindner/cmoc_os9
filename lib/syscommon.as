@@ -2,20 +2,9 @@
 
 
  section bss
-_errno EXPORT
 _os9err EXPORT
 _sysret EXPORT
-_mtop EXPORT
-_stop EXPORT
-_stbot EXPORT
-memend EXPORT
-
-_stop: rmb 2
-_stbot: rmb 2
-_mtop: rmb 2
-memend: rmb 2
-
-_errno: rmb 2
+_errno  EXTERNAL
  endsect
 
  section code
