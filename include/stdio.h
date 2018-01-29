@@ -59,7 +59,5 @@ long fseek(FILE *fp, long pos, int whence);
 long ftell(FILE *fp);
 void rewind(FILE *fp);
 
-void setbase(FILE *fp);
-
 #define	TRUE		(1)
 #define	FALSE		(0)

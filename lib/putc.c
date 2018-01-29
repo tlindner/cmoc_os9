@@ -71,8 +71,9 @@ L0058 	ldx   ,u            get _ptr of FILE *
 		andb  #_SCF
 		beq   L0079         exit if RBF 
 		ldb   2+2+1,s       get character
-		cmpb  #$0D          was it CR?
+		cmpb  #$0A          was it CR?
 		bne   L0079         no, exit
+		ldb   #$0D
 L0070 	pshs  u             else
 		lbsr  _flush        flush
 		std   ,s++ 

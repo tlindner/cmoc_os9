@@ -12,11 +12,11 @@ void test_memcpy()
     
     if (dst[0] == 't' && dst[1] == 'e' && dst[2] == 's' && dst[3] == 't')
     {
-		printf("%s [PASS] memcpy(%X, %X, %d) = %X\r", __func__, dst, src, count, result);
+		printf("%s [PASS] memcpy(%X, %X, %d) = %X\n", __func__, dst, src, count, result);
     }
     else
     {
-		printf("%s [FAIL] memcpy(%X, %X, %d) = %X\r", __func__, dst, src, count, result);
+		printf("%s [FAIL] memcpy(%X, %X, %d) = %X\n", __func__, dst, src, count, result);
     }
 }
 
@@ -29,11 +29,11 @@ void test_memset()
     
     if (dst[0] == 'X' && dst[1] == 'X' && dst[2] == 'X' && dst[3] == 'X' && dst[4] == 'X')
     {
-		printf("%s [PASS] memset(%X, %X, %d) = %X\r", __func__, dst, src, count, result);
+		printf("%s [PASS] memset(%X, %X, %d) = %X\n", __func__, dst, src, count, result);
     }
     else
     {
-		printf("%s [FAIL] memset(%X, %X, %d) = %X\r", __func__, dst, src, count, result);
+		printf("%s [FAIL] memset(%X, %X, %d) = %X\n", __func__, dst, src, count, result);
     }
 }
 
@@ -46,11 +46,11 @@ void test_memchr()
     
     if (result == src + 7)
     {
-		printf("%s [PASS] memchr(%X, %X, %d) = %X\r", __func__, src, locate, count, result);
+		printf("%s [PASS] memchr(%X, %X, %d) = %X\n", __func__, src, locate, count, result);
     }
     else
     {
-		printf("%s [FAIL] memchr(%X, %X, %d) = %X\r", __func__, src, locate, count, result);
+		printf("%s [FAIL] memchr(%X, %X, %d) = %X\n", __func__, src, locate, count, result);
     }
 
     // locate a character that is NOT in the source string
@@ -59,11 +59,11 @@ void test_memchr()
     
     if (result == 0x0000)
     {
-		printf("%s [PASS] memchr(%X, %X, %d) = %X\r", __func__, src, locate, count, result);
+		printf("%s [PASS] memchr(%X, %X, %d) = %X\n", __func__, src, locate, count, result);
     }
     else
     {
-		printf("%s [FAIL] memchr(%X, %X, %d) = %X\r", __func__, src, locate, count, result);
+		printf("%s [FAIL] memchr(%X, %X, %d) = %X\n", __func__, src, locate, count, result);
     }
 }
 
@@ -71,20 +71,24 @@ void test_sbrk()
 {
 	int request = 0;
 	void *result = sbrk(request);
-	printf("sbrk(%d) = $%X\r", request, result);
+	printf("sbrk(%d) = $%X\n", request, result);
 	request = 128;
 	result = sbrk(request);
-	printf("sbrk(%d) = $%X\r", request, result);
+	printf("sbrk(%d) = $%X\n", request, result);
 }
 
 void test_ibrk()
 {
+	// ibrk() affects _mtop
 	int request = 0;
 	void *result = ibrk(request);
-	printf("ibrk(%d) = $%X\r", request, result);
+	printf("ibrk(%d) = $%X\n", request, result);
 	request = 128;
+	result = ibrk(request); // the old _mtop is returned
+	printf("ibrk(%d) = $%X\n", request, result);
+	request = 0;
 	result = ibrk(request);
-	printf("ibrk(%d) = $%X\r", request, result);
+	printf("ibrk(%d) = $%X\n", request, result);
 }
 
 void test_memglobs()
@@ -128,13 +132,13 @@ void test_memglobs()
 	char **lineptr = lines;
 	while (*lineptr != NULL)
 	{
-		printf("%s\r", *lineptr);
+		printf("%s\n", *lineptr);
 		lineptr++;
 	}
-	printf("_memend = $%X\r", _memend);
-	printf("_sttop  = $%X\r", _sttop);
-	printf("_stbot  = $%X\r", _stbot);
-	printf("_mtop   = $%X\r", _mtop);
+	printf("_memend = $%X\n", _memend);
+	printf("_sttop  = $%X\n", _sttop);
+	printf("_stbot  = $%X\n", _stbot);
+	printf("_mtop   = $%X\n", _mtop);
 }
 
 int main(int argc, char **argv)
@@ -142,7 +146,7 @@ int main(int argc, char **argv)
 	test_memglobs();
 	test_sbrk();
 	test_ibrk();
-	return 0;
+
 	test_memcpy();
 	test_memset();
 	test_memchr();
