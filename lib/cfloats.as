@@ -899,6 +899,10 @@ initWordFromDWord
         std     ,x
         puls    u,pc
 
+cmpDWordDWord EXPORT
+cmpDWordDWord
+	rts
+
 copyDWord EXPORT
 ; Input: X = destination address; D = source address.
 ; Preserves X. Trashes D.

@@ -1,4 +1,4 @@
-#include "io.h"
+#include "fcntl.h"
 
 
 asm int
@@ -6,52 +6,52 @@ _os_create(char *pathname, int mode, path_id *path, int perm)
 {
 	asm
     {
-_os9err EXTERN
-_sysret EXTERN
+_oserr  EXTERN
+_osret  EXTERN
 * stack:
 *	0,s = return address
 *	2,s = pathname pointer
 *	4,s = mode
 *	6,s = path pointer [out]
 *	8,s = permissions
-		ldx 	2,s 		get pointer to pathname
-		lda   	8+1,s 	get permissions byte
-		tfr   	a,b 
-		andb	#$24 
-		orb 	#$0b 
-		os9		I$Create 
-		bcc 	createok 
-		cmpb	#$da 
-		bne		createerr 
-		lda		4+1,s 		get mode
-		bita	#$80 
-		bne		createerr 
-		anda	#7 
-		ldx 	2,s 		get pointer to pathname
-		os9		I$Open 
-		bcs 	createerr 
-		pshs	d		save off path number
-		tfr		a,b
+		ldx 	    2,s 		get pointer to pathname
+		lda   	    8+1,s 	    get permissions byte
+		tfr   	    a,b 
+		andb	    #$24 
+		orb 	    #$0b 
+		os9		    I$Create 
+		bcc 	    createok 
+		cmpb	    #$da 
+		bne		    createerr 
+		lda		    4+1,s 		get mode
+		bita	    #$80 
+		bne		    createerr 
+		anda	    #7 
+		ldx 	    2,s 		get pointer to pathname
+		os9		    I$Open 
+		bcs 	    createerr 
+		pshs	    d		    save off path number
+		tfr		    a,b
 		clra
-		std		[6+2,s]
-		puls	d
-		pshs	a,u 
-		ldx		#0 
-		leau	,x 
-		ldb 	#2 
-		os9		I$SetStt 
-		puls	a,u 
-		bcc		createok 
-		pshs	b 
-		os9		I$Close 
-		puls	b 
+		std		    [6+2,s]
+		puls	    d
+		pshs	    a,u 
+		ldx		    #0 
+		leau	    ,x 
+		ldb 	    #2 
+		os9		    I$SetStt 
+		puls	    a,u 
+		bcc		    createok 
+		pshs	    b 
+		os9		    I$Close 
+		puls	    b 
 createerr
-		lbra	_os9err 
+		lbra	    _oserr 
 createok
-		tfr		a,b
+		tfr		    a,b
 		clra
-		std		[6,s]
-		lbra	_sysret
+		std		    [6,s]
+		lbra	    _osret
     }
 }
 
@@ -66,16 +66,16 @@ _os_open(char *pathname, int mode, path_id *path)
 *	2,s = pathname pointer
 *	4,s = mode
 *	6,s = path pointer [out]
-		ldx  	2,s 			; get pathname pointer
-		lda		5,s				; get mode 
-		os9		I$Open 
-		lblo	_os9err
-		pshs	d
-		tfr		a,b
+		ldx  	    2,s 			; get pathname pointer
+		lda		    5,s				; get mode 
+		os9		    I$Open 
+		lblo	    _oserr
+		pshs	    d
+		tfr		    a,b
 		clra
-		std		[6+2,s]
-		puls	d
-		lbra	_sysret
+		std		    [6+2,s]
+		puls	    d
+		lbra	    _osret
     }
 }
 
@@ -88,9 +88,9 @@ _os_close(path_id path)
 * stack:
 *	0,s = return address
 *	2,s = path
-        lda     3,s             ; get path
-        os9     I$Close
-        lbra	_sysret
+        lda         2+1,s           ; get path
+        os9         I$Close
+        lbra	    _osret
     }
 }
 
@@ -104,10 +104,10 @@ _os_delete(char *pathname, int mode)
 *	0,s = return address
 *	2,s = pathname pointer
 *	4,s = mode
-        ldx     2,s             ; get pathname pointer
-        lda     5,s             ; get mode
-        os9     I$DeletX
-        lbra	_sysret
+        ldx         2,s             ; get pathname pointer
+        lda         4+1,s           ; get mode
+        os9         I$DeletX
+        lbra	    _osret
     }
 }
 
@@ -121,10 +121,10 @@ _os_makdir(char *pathname, int perm)
 *	0,s = return address
 *	2,s = pathname pointer
 *	4,s = permissions
-        ldx     2,s             ; get pathname pointer
-        ldb     5,s             ; get permissions
-        os9     I$MakDir
-        lbra	_sysret
+        ldx         2,s             ; get pathname pointer
+        ldb         5,s             ; get permissions
+        os9         I$MakDir
+        lbra	    _osret
     }
 }
 
@@ -152,10 +152,10 @@ afterread
 		ldy			#0000   
 		bra			savecount   
 readerr	puls		x,y 
-		lbra		_os9err 
+		lbra		_oserr 
 savecount sty		[6+4,s]
 		puls		x,y 
-		lbra		_sysret
+		lbra		_osret
     }
 }
 
@@ -197,12 +197,12 @@ _os_write(path_id path, void *data, int *count)
 		os9			I$Write
 L00xe	bcc			store_writeex 
 		puls		y 
-		lbra		_os9err 
+		lbra		_oserr 
 store_writeex
 		sty			[6+2,s]
 writeex
 		puls		y
-		lbra		_sysret
+		lbra		_osret
 	}
 }
 
@@ -244,7 +244,6 @@ lseek(int path, long position, int whence)
 {
     asm
     {
-_flacc  EXTERNAL
 * stack:
 *	0,s = return address
 *	2,s = path
@@ -269,6 +268,7 @@ lseek10
 lserr   clra
         std         _errno,y
         ldd         #-1
+_flacc  EXTERNAL
         leax        _flacc,y
         std         0,x
         std         2,x

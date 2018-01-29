@@ -1,4 +1,4 @@
-#include <io.h>
+#include <fcntl.h>
 
 /**** TEXT FUNCTIONS ****/
 

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <assert.h>
 
 char eolchar = '\r';
@@ -31,6 +32,12 @@ void test_fprintf(FILE *fp)
 	fprintf(fp, "fprintf Hello world!%c", eolchar);
 	fprintf(fp, "fprintf Hello %s world!%c", "small", eolchar);
 	fprintf(fp, "fprintf Hello %s %s!%c", "CoCo", "community", eolchar);
+}
+
+void test_fopen()
+{
+//	FILE *fp = fopen("x", "r");
+//	fclose(fp);
 }
 
 int main()

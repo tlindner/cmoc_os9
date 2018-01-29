@@ -1,22 +1,36 @@
-* Disassembly by Os9disasm of syscommon.r
+        section code
 
-
- section bss
-_os9err EXPORT
-_sysret EXPORT
+* global error entry point for _os_xxxx calls
+_oserr  EXPORT
+_oserr
+        clra
 _errno  EXTERNAL
- endsect
+        std     _errno,y
+        rts
+        
+* global return entry point for _os_xxxx calls
+_osret  EXPORT
+_osret
+        bcs     _oserr
+        clra
+        clrb
+        rts
+        
+* global error entry point for traditional calls
+_os9err EXPORT
+_os9err
+        clra   
+        std   _errno,y 
+        ldd   #-1 
+        rts    
+        
+* global return entry point for traditional calls
+_sysret EXPORT
+_sysret
+        bcs   _os9err 
+        clra   
+        clrb   
+        rts    
 
- section code
-
-_os9err: clra   
- std   _errno,y 
-* ldd   #-1 
- rts    
-_sysret: bcs   _os9err 
- clra   
- clrb   
- rts    
-
- endsect  
+        endsect  
 

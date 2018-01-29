@@ -5,9 +5,6 @@ _os_syscall(int callcode, registers_6809 *registers)
 {
 	asm
 	{
-_sysret EXTERNAL
-_os9err EXTERNAL
-
 * stack:
 *	0,s = return address
 *	2,s = call code
@@ -34,8 +31,10 @@ _os9err EXTERNAL
         leas    4,s 
         puls    y,u 
         bita    #1          carry set?
-        lbeq    _sysret
-        lbra    _os9err
+_osret  EXTERNAL
+_oserr  EXTERNAL
+        lbeq    _osret
+        lbra    _oserr
 	}
 }
 

@@ -1,4 +1,4 @@
-#include <io.h>
+#include <fcntl.h>
 
 asm int
 getstat(int stat, int path, void *p1, void *p2)

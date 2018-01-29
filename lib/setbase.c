@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <io.h>
+#include <fcntl.h>
 
 asm void
 setbase(FILE *stream)

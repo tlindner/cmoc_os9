@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <os.h>
 
 int spare;
@@ -8,8 +9,9 @@ sbrk(int increase)
 	asm
 	{
 __memend EXTERNAL
-__mtop EXTERNAL
-__stbot EXTERNAL
+* stack:
+*	0,s = return address
+*	2,s = increase amount
         ldd     __memend,y      get top of data area
         pshs    d               save on stack for now
         ldd     2+2,s           get parameter (amount to increase)
@@ -62,9 +64,14 @@ ibrk(int increase)
 {
 	asm
 	{
+* stack:
+*	0,s = return address
+*	2,s = increase amount
         ldd     2,s             get parameter (amount to increase with data allocation)
+__mtop EXTERNAL
         addd    __mtop,y        add to top of current memory
         bcs     ibrkerr         if higher, error out
+__stbot EXTERNAL
         cmpd    __stbot,y       compare to bottom of stack -- does it overlap?
         bhs     ibrkerr         yes, it is an error
         pshs    d               otherwise save off D
@@ -86,10 +93,13 @@ ibrkerr ldd     #-1             error
 }
 
 asm void *
-unbrk(int increase)
+unbrk(int decrease)
 {
 	asm
 	{
+* stack:
+*	0,s = return address
+*	2,s = decrease amount
         ldd     2,s           get parameter in D (memory to return from sbrk)
         pshs    y             save off data ptr
         os9     F$Mem         change data area size

@@ -5,8 +5,8 @@ _os_modlink(char *modname, int lang, int type, void **modaddr)
 {
     asm
     {
-_os9err EXTERNAL
-_sysret EXTERNAL
+_oserr  EXTERNAL
+_osret  EXTERNAL
         pshs    y,u 
         ldx     4+2,s         get pointer to module name
         lda     4+4+1,s       get lang byte
@@ -18,9 +18,9 @@ _sysret EXTERNAL
         os9     F$Link 
 L000f   tfr     u,d 
         puls    y,u 
-        lblo    _os9err 
+        lblo    _oserr 
         std     [8,s]         save off module address
-        lbra    _sysret
+        lbra    _osret
     }
 }
 
@@ -51,7 +51,7 @@ _os_modunlink(void *modaddr)
         ldu     2+2,s 
         os9     F$UnLink 
         puls    u 
-        lbra    _sysret 
+        lbra    _osret 
     }
 }
  

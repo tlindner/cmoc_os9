@@ -1,15 +1,18 @@
-#include <io.h>
+#include <fcntl.h>
 
 asm int
 abs(int v)
 {
 	asm
 	{
-        ldd   2,s 
-        bpl   absex 
+* stack:
+*	0,s = return address
+*	2,s = value
+        ldd         2,s 
+        bpl         absex 
         nega   
         negb   
-        sbca  #0 
+        sbca        #0 
 absex   rts    
     }
 }

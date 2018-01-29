@@ -144,6 +144,13 @@ void test_memglobs()
 	printf("_mtop   = $%X\n", _mtop);
 }
 
+void test_malloc()
+{
+	char *p = (char *)malloc(16);
+	printf("p = $%X\n", p);
+	free(p);
+}
+
 int main(int argc, char **argv)
 {
 	test_memglobs();
@@ -153,6 +160,7 @@ int main(int argc, char **argv)
 	test_memcpy();
 	test_memset();
 	test_memchr();
+	test_malloc();
 
 	return 0;
 }
