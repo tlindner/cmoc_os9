@@ -21,6 +21,9 @@ ASOUT = --obj -o
 %.o: %.as
 	$(ASM) $(AFLAGS) $< $(ASOUT)$@
 
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 all:	libc.a
 
 libc.a: $(MODS)
