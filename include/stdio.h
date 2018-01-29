@@ -1,3 +1,6 @@
+#ifndef _STDIO_H
+#define _STDIO_H
+
 #define BUFSIZ  256
 #define _NFILE  16
 typedef struct _iobuf {
@@ -26,7 +29,6 @@ extern FILE _iob[_NFILE];
 
 #define EOF 		(-1)
 #define EOL 		13
-#define NULL 		0
 
 #define stdin 		_iob
 #define stdout 		(&_iob[1])
@@ -61,3 +63,5 @@ void rewind(FILE *fp);
 
 #define	TRUE		(1)
 #define	FALSE		(0)
+
+#endif

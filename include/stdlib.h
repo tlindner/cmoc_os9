@@ -1,11 +1,14 @@
-typedef int size_t;
+#ifndef _STDLIB_H
+#define _STDLIB_H
+
+#include <sys/types.h>
+
 int rand(void);
 void srand(unsigned seed);
-extern int errno;
-int exit(int status);
-float    atof();
-int      atoi();
-long     atol();
+
+float    atof(char *str);
+int      atoi(char *str);
+long     atol(char *str);
 char     *itoa();
 char     *ltoa();
 char     *utoa();
@@ -15,9 +18,10 @@ int      max();
 int      min();
 unsigned umin();
 unsigned umax();
-char     *calloc();
-char     *malloc();
-char     *realloc();
-/*
-void     free();
-*/
+
+void     *calloc(size_t count, size_t size);
+void     free(void *ptr);
+void     *malloc(size_t size);
+void     *realloc(void *ptr, size_t size);
+
+#endif
