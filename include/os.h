@@ -312,7 +312,6 @@ error_code _os_getuid(int *uid);
 error_code _os_asetuid(int uid);
 error_code _os_setuid(int uid);
 
-
 error_code _os_send(int pid, int sig);
 error_code _os_wait(int *pid);
 error_code _os_setpr(int pid, int priority);

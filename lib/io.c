@@ -250,8 +250,8 @@ lseek(int path, long position, int whence)
 *	4,s = MSW of 32-bit position
 *   6,s = LSW of 32-bit position
 *	8,s = whence flag
-		pshs 		u
-		ldd         2+8,s               get whence flag
+		pshs 		d,u
+		ldd         4+8,s               get whence flag
 		bne         lseek10
 		ldu         #0
 		ldx         #0
@@ -275,30 +275,30 @@ _flacc  EXTERNAL
         puls        d,u,pc
 
 * from the end
-end     lda         2+2+1,s             get path number        
+end     lda         4+2+1,s             get path number        
         ldb         #SS_Size            get file size code
         os9         I$GetStt
         bcs         lserr
         
         bra         doseek
         
-here    lda         2+2+1,s             get path number
+here    lda         4+2+1,s             get path number
         ldb         #SS_Pos
         os9         I$GetStt
         bcs         lserr
         
 doseek  tfr         u,d                 work on the LSW first
-        addd        2+6+1,s             get low byte of LSW
+        addd        4+6+1,s             get low byte of LSW
         std         _flacc+2,y          store in LSW of _flacc
         tfr         d,u                 put D in U
         tfr         x,d                 and X in D
-        adcb        2+4+1,s             add with carry low byte of MSW in B
-        adca        2+4,s               and with carry high byte of MSW in A
+        adcb        4+4+1,s             add with carry low byte of MSW in B
+        adca        4+4,s               and with carry high byte of MSW in A
         bmi         lserr               if negiative, seek is before beginning of file
         tfr         d,x                 move D to X
         std         _flacc,y            store in MSW of _flacc
         
-        lda         2+2+1,s             get path number
+        lda         4+2+1,s             get path number
         os9         I$Seek
         bcs         lserr
         

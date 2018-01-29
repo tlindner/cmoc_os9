@@ -40,7 +40,7 @@ void test_create_and_delete_file()
 	}
 	else
 	{
-		printf("%s [FAIL] create(\"%s\", %d, %x) = %d\n, errno = %d\n", __func__, file, mode, perms, path, errno);
+		printf("%s [FAIL] create(\"%s\", %d, %x) = %d, errno = %d\n", __func__, file, mode, perms, path, errno);
 	}
 }
 
@@ -102,6 +102,7 @@ void test_create_and_seek()
 			long offset = 5;
 			int whence = 0;
 			long result = lseek(path, offset, whence);
+#if 0
 			if (result == offset)
 			{
 				// file position is now at 5
@@ -124,8 +125,9 @@ void test_create_and_seek()
 			{
 				printf("%s [FAIL] lseek(%d, %l, %d) = %ld\n", __func__, path, offset, whence, result);
 			}
-			_os_close(path);
-			_os_delete(file, FAM_READ);
+#endif
+			close(path);
+			unlink(file);
 		}
 		else
 		{
@@ -177,6 +179,7 @@ void test_make_and_attr_file()
 			printf("%s [FAIL] _os_ss_attr(\"%s\", %d) = %d\n", __func__, file, perm, result);
 		}
 #endif
+		unlink(file);
 	}
 	else
 	{
@@ -187,11 +190,11 @@ void test_make_and_attr_file()
 int main()
 {
 	test_create_and_delete_file();
-//	test_open_nonexistent_file();
-//	test_delete_nonexistent_file();
-//	test_create_and_seek();
-//	test_make_directory();
-//	test_make_and_attr_file();
+	test_open_nonexistent_file();
+	test_delete_nonexistent_file();
+	test_create_and_seek();
+	test_make_directory();
+	test_make_and_attr_file();
 
 	return 0;
 }
