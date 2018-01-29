@@ -1,8 +1,10 @@
  section bss
 
+__chcodes EXPORT
 _chcodes EXPORT
 
 * Initialized Data (class G)
+__chcodes:
 _chcodes: fcb $01 
  fcb $01 
  fcb $01 

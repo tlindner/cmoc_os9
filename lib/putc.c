@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <os.h>
 
 asm int
 putc(int c, FILE *stream)
@@ -27,14 +28,15 @@ _ftell	EXTERNAL
 		pshs  u             put FILE pointer on stack
 		lbsr  _setbase      setup FILE pointer
 		leas  2,s           clean up stack 
-inited 	ldd   6,u           get _end pointer in FILE
-		andb  #4 
-		beq   L004b 
+inited 	ldd   6,u           get _flag pointer in FILE
+		andb  #_UNBUF 
+		beq   buffered      branch if buffered
+* unbuffered I/O
 		ldd   #1			write 1 character
 		pshs  d 			push count on stack
         leax  ,s			point X to count
         pshs  x				push pointer
-		leax  9,s			point to character
+		leax  4+2+2+1,s	    point to character
 		ldd   8,u			get _fd path in FILE			 
 		pshs  d,x 			push path and pointer to char
 		ldb   7,u           get _flag word in FILE 
@@ -51,26 +53,28 @@ L0038 	leas  8,s 			clean up stack
 		stb   7,u           save
 badexit	ldd   #-1           return -1 as result
  		puls  u,pc          bye!
-L004b 	anda  #1 
-		bne   L0058 
+
+buffered
+     	anda  #$01          _WRITTEN
+		bne   L0058         branch if _WRITTEN 
 		pshs  u 
-		lbsr  L00fd 
+		lbsr  _flush        flush buffer
 		std   ,s++ 
 		bne   badexit 
-L0058 	ldx   ,u 
-		ldb   5,s 
+L0058 	ldx   ,u            get _ptr of FILE *
+		ldb   2+2+1,s       get character           
 		stb   ,x+ 
-		stx   ,u 
-		cmpx  4,u 
-		bcc   L0070 
-		ldb   7,u 
-		andb  #$40 
-		beq   L0079 
-		ldb   5,s 
-		cmpb  #$0d 
-		bne   L0079 
-L0070 	pshs  u 
-		lbsr  L00fd 
+		stx   ,u            save updated pointer
+		cmpx  4,u           _end ?
+		bcc   L0070         branch if not
+		ldb   7,u           get _flag+1
+		andb  #_SCF
+		beq   L0079         exit if RBF 
+		ldb   2+2+1,s       get character
+		cmpb  #$0D          was it CR?
+		bne   L0079         no, exit
+L0070 	pshs  u             else
+		lbsr  _flush        flush
 		std   ,s++ 
 		bne   badexit 
 L0079 	ldd   4,s               clean up stack
@@ -159,48 +163,57 @@ fflush(FILE *stream)
 		leas  2,s               clean up stack
 finited
      	pshs  u                 
-		bsr   L00fd 
+		bsr   _flush 
 		leas  2,s 
 		puls  u,pc 
-L00fd 	pshs  u                 save FILE ptr
-		ldu   4,s 
+		
+* actual flusher
+* marks iob with "WRITTEN"
+* routes output AR for SCF & RBF
+* calls ftell and lseek if first write on partial buffer
+* resets ptr to buffer start & marks w/"WRITTEN"
+* Entry: 0,s = return address
+*        2,s = FILE *
+_flush	pshs  u
+		ldu   2+2,s         get FILE * 
 		leas  -4,s 
-		lda   6,u 
-		anda  #1 
-		bne   L012c 
-		ldd   ,u 
-		cmpd  4,u 
-		beq   L012c 
+		lda   6,u           get _flag
+		anda  #1            _WRITTEN set?
+		bne   L012c         branch if so
+		ldd   ,u            get _ptr
+		cmpd  4,u           compare to _end
+		beq   L012c         branch if buffer full
 		clra   
 		clrb   
 		pshs  d 
-		pshs  u 
-		lbsr  ftell 
-		leas  2,s 
-		ldd   2,x 
-		pshs  d 
-		ldd   ,x 
-		pshs  d 
-		ldd   8,u 
-		pshs  d 
-		lbsr  __os_seek 
-		leas  8,s 
-L012c 	ldd   ,u 
-		subd  2,u 
+		pshs  u
+		lbsr  ftell         position
+		leas  2,s           eat FILE * pushed earlier
+		ldd   2,x           LSW 
+		pshs  d             save on stack
+		ldd   ,x            MSW
+		pshs  d             save on stack
+		ldd   8,u           get _fd path
+		pshs  d             do seek
+_lseek  EXTERNAL
+		lbsr  _lseek 
+		leas  8,s           clean stack
+L012c 	ldd   ,u            get _ptr
+		subd  2,u           subtract _base
 		std   2,s 
-		lbeq  L0194 
+		lbeq  L0194         if none
 		ldd   6,u 
-		anda  #1 
-		lbeq  L0194 
-		andb  #$40 
-		beq   L016f 
-		ldd   2,u 
-		bra   L0167 
-* BGP changed
-L0146
+		anda  #1            _WRITTEN
+		lbeq  L0194         branch if not written
+		andb  #_SCF
+		beq   _flushrbf     branch if RBF 
+		ldd   2,u           get _base
+		bra   _flush3 
+* flush SCF device
+_flush2
         pshs  x				save off X (do we need to?)
      	pshs  d				put count on stack
-     	leax  ,s			point x to count on stack
+     	leax  ,s			point X to count on stack
      	pshs  x 			push pointer
 		ldd   ,u 			get address of data to write
 		pshs  d 			push on stack
@@ -215,36 +228,40 @@ L0146
 		std   2,s 
 		ldd   ,u 
 		addd  ,s 
-L0167	std   ,u 
+_flush3	std   ,u 
 		ldd   2,s 
-		bne   L0146 
+		bne   _flush2 
 		bra   L0194 
-L016f	pshs  x
+		
+* flush RBF device
+_flushrbf
+    	pshs  x                 save X
    	 	leax  2,s 				get address of count
-		pshs  x 
-		ldd   2,u 
-		pshs  d 
-		leax   8,u 
-		pshs  x 
+		pshs  x                 save as 3rd parameter
+		ldd   2,u               get _base
+		pshs  d                 save as 2nd parameter
+		leax  8,u               get _fd into X
+		pshs  x                 save as 1st parameter
 		lbsr  __os_write
-		leas  8,s
-		ldd   8,u 
-		cmpd  2,s 
+		leas  8,s               clean up stack
+		ldd   8,u               get _fd into D
+		cmpd  2,s               did we write all?
 		beq   L0194 
-L0185 	ldb   7,u 
-		orb   #$20 
-		stb   7,u 
-		ldd   4,u 
-		std   ,u 
-		ldd   #-1 
+L0185 	ldb   7,u               get _flag+1
+		orb   #_ERR             set error flag
+		stb   7,u               save in _flag+1
+		ldd   4,u               get _end
+		std   ,u                set _ptr to end of buffer
+		ldd   #-1               return EOF
 		bra   L01a4 
-L0194 	lda   6,u 
-		ora   #1 
-		sta   6,u 
-		ldd   2,u 
-		std   ,u 
-		addd  11,u 
-		std   4,u 
+		
+L0194 	lda   6,u               get _flag
+		ora   #1                set _WRITTEN flag
+		sta   6,u               save it to _flag
+		ldd   2,u               get _base to reset pointers
+		std   ,u                store _ptr    
+		addd  11,u              add _bufsiz
+		std   4,u               store in _end 
 		clra   
 		clrb   
 L01a4 	leas  4,s 

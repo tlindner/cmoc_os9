@@ -11,6 +11,8 @@ memcpy(void *dst, void *src, size_t len)
 *	2,s = destination pointer
 *	4,s = source pointer
 *	6,s = count of bytes to copy
+memcpy EXPORT
+memcpy:
     pshs  y,u 
     ldu   2+4,s         get destination pointer in U
     ldy   4+4,s         get source pointer in Y

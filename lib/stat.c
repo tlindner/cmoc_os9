@@ -1,45 +1,43 @@
 #include <io.h>
 
 asm int
-getstat(int stat, int param)
+getstat(int stat, int path, void *p1, void *p2)
 {
     asm
     {
+		pshs    y,u 		    save off params
+		lda     4+2+3,s 		get path
+		ldb     4+2+1,s 		get stat code
 _os9err	EXTERNAL
 _sysret	EXTERNAL
-		pshs  y,u 		    save off params
-		lda   4+2+3,s 		get ?
-		ldb   4+2+1,s 		get stat code
-		beq   L003c 		branch if zero (SS_Opt)
-		cmpb  #SS_Ready
-		beq   L003e 
-		cmpb  #SS_Size
-		beq   L0024 
-		cmpb  #SS_Pos
-		beq   L0024 
-		cmpb  #SS_EOF
-		beq   L003e 
-		cmpb  #SS_DevNm
-		beq   L003c 
-		cmpb  #SS_FD
-		beq   L0039 
-		ldb   #E$UnkSvc
-		bra   L0029 
-L0024 	os9 I$GetStt 
- 		bcc   L002e 
-L0029 	puls  y,u 
- 		lbra  _os9err 
-L002e 	stx   [10,s] 
-		ldx   10,s 
-		stu   2,x 
+		beq     L003c 		    branch if zero (SS_Opt)
+		cmpb    #SS_Ready
+		beq     L003e 
+		cmpb    #SS_Size
+		beq     L0024 
+		cmpb    #SS_Pos
+		beq     L0024 
+		cmpb    #SS_EOF
+		beq     L003e 
+		cmpb    #SS_DevNm
+		beq     L003c 
+		cmpb    #SS_FD
+		beq     L0039 
+		ldb     #E$UnkSvc
+		bra     gsbye 
+L0024 	os9     I$GetStt 
+ 		bcs     gsbye
+L002e 	stx     [4+2+4,s] 
+		ldx     4+2+4,s 
+		stu     2,x 
 		clrb   
 		clra   
-		puls  y,u,pc 
-L0039 	ldy   12,s 
-L003c 	ldx   10,s 
-L003e 	os9 I$GetStt 
-		puls  y,u 
-		lbra  _sysret
+		bra     gsbye
+L0039 	ldy     4+2+6,s 
+L003c 	ldx     4+2+4,s 
+L003e  	os9     I$GetStt 
+gsbye   puls    y,u 
+		lbra    _sysret
 	}
 } 
 

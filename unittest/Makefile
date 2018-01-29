@@ -1,5 +1,5 @@
 CC = cmoc
-OS9FLAGS = --os9
+OS9FLAGS = --os9 -nodefaultlibs
 OPT = -O2
 LFLAGS = -I../include -I../cgfx/include $(OS9FLAGS)
 
@@ -7,7 +7,7 @@ LFLAGS = -I../include -I../cgfx/include $(OS9FLAGS)
 	$(CC) $(LFLAGS) $^ $(OBJS) -L../lib -lc -L../cgfx -lcgfx
 
 
-TESTS	= timetest fiotest iotest syscalltest memtest wintest forktest maze
+TESTS	= timetest fiotest iotest syscalltest memtest wintest forktest cglobtest 
 
 all:	$(TESTS)
 

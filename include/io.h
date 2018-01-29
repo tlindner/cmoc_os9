@@ -36,8 +36,11 @@ error_code _os_delete(char *pathname, int mode);
 error_code _os_makdir(char *pathname, int perm);
 
 error_code _os_seek(path_id path, long position);
+long lseek(int path, long position, int whence);
 
 error_code _os_ss_attr(char *pathname, int perm);
 
-int getstat(int code, int param);
+int getstat(int code, int path, void *p1, void *p2);
 int setstat(int code, int param);
+
+void pflinit(void);

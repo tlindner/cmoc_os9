@@ -860,5 +860,53 @@ addSingleSingle EXPORT
 addSingleSingle
 	rts
 
+subSingleSingle EXPORT
+subSingleSingle
+	rts
+
+mulSingleSingle EXPORT
+mulSingleSingle
+	rts
+
+divSingleSingle EXPORT
+divSingleSingle
+	rts
+
+copySingle EXPORT
+copySingle
+	rts
+
+cmpSingleSingle EXPORT
+cmpSingleSingle
+	rts
+
+isSingleZero EXPORT
+isSingleZero
+	rts
+
+push5ByteStruct EXPORT
+push5ByteStruct
+	rts
+
+incrementDWord EXPORT
+incrementDWord
+	rts
+
+push4ByteStruct EXPORT
+push4ByteStruct
+	rts
+
+initDWordFromSignedWord EXPORT
+initDWordFromSignedWord
+	rts
+
+MUL16 EXPORT
+MUL16
+	rts
+
+SDIV16 EXPORT
+SDIV16
+	rts
+
  endsect  
 

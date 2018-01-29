@@ -7,11 +7,11 @@ sbrk(int increase)
 {
 	asm
 	{
-memend EXTERNAL
-_mtop EXTERNAL
-_stbot EXTERNAL
+__memend EXTERNAL
+__mtop EXTERNAL
+__stbot EXTERNAL
 
-        ldd     memend,y        get top of data area
+        ldd     __memend,y        get top of data area
         pshs    d               save on stack for now
         ldd     2+2,s           get parameter (amount to increase)
         cmpd    _spare,y        compare to spare (initially set to zero)
@@ -28,7 +28,7 @@ _stbot EXTERNAL
         ldd     #-1             else error
         leas    2,s             recover stack
         rts                     return
-L0027   std     memend,y        save new memory area upper bound in memend
+L0027   std     __memend,y        save new memory area upper bound in memend
         addd    _spare,y        add to spare
         subd    ,s              subtract saved memend at start of call
         std     _spare,y        and update spare to that
@@ -38,13 +38,13 @@ L0035   leas    2,s             eat D saved on stack earlier
         subd    2+2,s           subtract increase from it to get new spare
         std     _spare,y        store updated value in spare
 * clear newly reserved area
-        ldd     memend,y        get memend
+        ldd     __memend,y        get memend
         subd    ,s++            subtract old spare saved on stack
         pshs    d               save D on stack
         clra                    clear A
         ldx     ,s              get 2 bytes on stack into X
 clr@    sta     ,x+             write 0 to location and increment
-        cmpx    memend,y        end of memory?
+        cmpx    __memend,y        end of memory?
         bcs     clr@            branch if not
         puls    d,pc 
      }
@@ -56,20 +56,21 @@ ibrk(int increase)
 	asm
 	{
         ldd     2,s             get parameter (amount to increase)
-        addd    _mtop,y         add to top of memory
+        addd    __mtop,y        add to top of memory
         bcs     ibrkerr         if higher, error out
-        cmpd    _stbot,y        compare to bottom of stack
+        cmpd    __stbot,y        compare to bottom of stack
         bcc     ibrkerr         branch if greater or equal
         pshs    d               save off D
-        ldx     _mtop,y         get mtop in X
+        ldx     __mtop,y        get mtop in X
         clra   
 clr@    cmpx    ,s 
         bcc     L0076 
         sta     ,x+ 
         bra     clr@
-L0076   ldd     _mtop,y         get current _mtop
+L0076   ldd     __mtop,y        get current _mtop
+
         puls    x               get earlier saved value 
-        stx     _mtop,y         new _mtop
+        stx     __mtop,y        new _mtop
         rts    
 ibrkerr ldd     #-1             error
         rts    
@@ -89,7 +90,7 @@ unbrk(int increase)
         puls    y,pc 
 L0093   tfr     y,d           transfer address of new area upper bound into D
         puls    y             recover data pointer
-        std     memend,y      store D in memend
+        std     __memend,y      store D in memend
         clra   
         clrb   
         std     _spare,y      no more spare room

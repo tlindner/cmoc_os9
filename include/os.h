@@ -3,6 +3,7 @@
  */
 
 extern int errno;
+extern void *_mtop, *_sttop, *_stbot, *_memend;
 
 typedef int error_code;
 

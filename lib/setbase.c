@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <io.h>
 
-asm int
+asm void
 setbase(FILE *stream)
 {
     asm
@@ -19,48 +19,49 @@ _getstat	EXTERNAL
             leax  ,s                and point X to space
             ldd   8,u               get _fd from FILE
             pshs  d,x               save _fd and pointer to 32 bytes
-            clra                    stdin
+            clra                    get option section code
             clrb   
             pshs  d                 save on stack
-            lbsr  _getstat          call getstat
-            ldb   #$40 
-            lda   6,s 
+            lbsr  _getstat          call getstat to read option section
+            ldb   #_SCF             assume SCF
+            lda   6,s               type byte in option section
             beq   L0022 
-            ldb   #$80 
-L0022       leas  38,s 
-            orb   7,u 
-            stb   7,u 
-L0029       lda   6,u 
-            ora   #$80 
-            sta   6,u 
-            andb  #$0c 
-            bne   L006c 
-            ldd   11,u 
-            bne   L003c 
-            ldd   #$0100 
-            std   11,u 
-L003c       ldd   2,u 
-            bne   L0051 
-            ldd   11,u 
+            ldb   #_RBF
+L0022       leas  38,s              clean stack 
+            orb   7,u               OR with _flag+1,u
+            stb   7,u               save it
+L0029       lda   6,u               get _flag
+            ora   #$80              OR with INIT_
+            sta   6,u               save back
+            andb  #_BIGBUF|_UNBUF    
+            bne   L006c             if big or unbuf
+            ldd   11,u              get _bufsiz
+            bne   L003c             branch if buf aleady sized
+            ldd   #BUFSIZ
+            std   11,u              store in _bufsiz
+L003c       ldd   2,u               get _base
+            bne   L0051             branch if buffer already allocated
+            ldd   11,u              get buffer size
             pshs  d 
             lbsr  _ibrk 
-            leas  2,s 
-            std   2,u 
+            leas  2,s               
+            std   2,u               store in _base
             cmpd  #-1 
-            beq   L0055 
-L0051       ldb   #8 
+            beq   L0055             branch if error
+L0051       ldb   #_BIGBUF 
             bra   L0060 
-L0055       leax  10,u 
-            stx   2,u 
+            
+L0055       leax  10,u              point X to _save if unbuffered
+            stx   2,u               save in _base
             ldd   #1 
-            std   11,u 
-            ldb   #4 
-L0060       orb   7,u 
-            stb   7,u 
-            ldd   2,u 
-            addd  11,u 
-            std   4,u 
-            std   ,u 
+            std   11,u              save buffer size
+            ldb   #_UNBUF 
+L0060       orb   7,u               OR with _flag
+            stb   7,u               save it
+            ldd   2,u               get _base ptr
+            addd  11,u              add _bufsiz
+            std   4,u               save to _end
+            std   ,u                save ptr
 L006c       puls  u,pc 
     }
 }

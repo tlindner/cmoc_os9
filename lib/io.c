@@ -234,13 +234,75 @@ _os_seek(path_id path, long position)
 * stack:
 *	0,s = return address
 *	2,s = path
-*	4,s = 32-bit position
-		lda			3,s
+*	4,s = MSW of 32-bit position
+*   6,s = LSW of 32-bit position
+    }
+}
+
+asm long
+lseek(int path, long position, int whence)
+{
+    asm
+    {
+_flacc  EXTERNAL
+* stack:
+*	0,s = return address
+*	2,s = path
+*	4,s = MSW of 32-bit position
+*   6,s = LSW of 32-bit position
+*	8,s = whence flag
 		pshs 		u
-		ldx			4+2,s
-		ldu			4+2+2,s
-		os9			I$Seek 
-		puls		u
-		lbra		_sysret
+		ldd         2+8,s               get whence flag
+		bne         lseek10
+		ldu         #0
+		ldx         #0
+		bra         doseek
+		
+lseek10 
+        cmpd        #1                  from current location?
+        beq         here
+        cmpd        #2                  from the end?
+        beq         end
+* bad type
+        ldb         #E$Seek
+        
+lserr   clra
+        std         _errno,y
+        ldd         #-1
+        leax        _flacc,y
+        std         0,x
+        std         2,x
+        puls        d,u,pc
+
+* from the end
+end     lda         2+2+1,s             get path number        
+        ldb         #SS_Size            get file size code
+        os9         I$GetStt
+        bcs         lserr
+        
+        bra         doseek
+        
+here    lda         2+2+1,s             get path number
+        ldb         #SS_Pos
+        os9         I$GetStt
+        bcs         lserr
+        
+doseek  tfr         u,d                 work on the LSW first
+        addd        2+6+1,s             get low byte of LSW
+        std         _flacc+2,y          store in LSW of _flacc
+        tfr         d,u                 put D in U
+        tfr         x,d                 and X in D
+        adcb        2+4+1,s             add with carry low byte of MSW in B
+        adca        2+4,s               and with carry high byte of MSW in A
+        bmi         lserr               if negiative, seek is before beginning of file
+        tfr         d,x                 move D to X
+        std         _flacc,y            store in MSW of _flacc
+        
+        lda         2+2+1,s             get path number
+        os9         I$Seek
+        bcs         lserr
+        
+        leax        _flacc,y
+        puls        d,u,pc
 	}
 }

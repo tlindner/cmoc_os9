@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <os.h>
 
 void test_memcpy()
 {
@@ -66,8 +67,15 @@ void test_memchr()
     }
 }
 
+void test_ibrk()
+{
+	void *result = ibrk(128);
+}
+
 int main(int argc, char **argv)
 {
+	test_ibrk();
+	return 0;
 	test_memcpy();
 	test_memset();
 	test_memchr();

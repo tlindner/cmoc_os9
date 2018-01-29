@@ -110,7 +110,7 @@ atoftbl: fcb $00
 
  section code
 
-scale EXPORT
+_scale EXPORT
 
 _dmul EXTERNAL
 _ddiv EXTERNAL
@@ -156,7 +156,7 @@ L003e leau  _flacc,y
  pshs  u 
  lbsr  _dmove 
  puls  u,pc 
-scale: pshs  u 
+_scale: pshs  u 
  ldd   12,s 
  cmpd  #9 
  ble   L0079 

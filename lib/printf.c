@@ -1,24 +1,17 @@
 /*
- section bss
-
-* Uninitialized data (class B)
-B0000 rmb 2 
-B0002 rmb 10 
-* Initialized Data (class G)
-G0000 fcb $27 
- fcb $10 
- fcb $03 
- fcb $e8 
- fcb $00 
- fcb $64 
- fcb $00 
- fcb $0a 
-
- endsect  
-
- section code
+ *  printf(format, expr1, expr2, .... exprn)
+ *  fprintf(stream, format, expr1, expr2, .... exprn)
+ *  sprintf(buffer, format, expr1, expr2, .... exprn)
+ *
+ * 12-05-2005 tjl Fixed a bug where sprintf( s, "" ) would
+ *                not put a null in the string s.
 */
 #include <stdio.h>
+#include <os.h>
+
+FILE *fpmp;
+char buf1[10];
+int dectbl[4]= {10000,1000,100,10};
 
 asm int
 printf(char *fmt, ...)
@@ -27,14 +20,15 @@ printf(char *fmt, ...)
     {
 _chcodes	EXTERNAL
 _putc		EXTERNAL
-pflong		EXTERNAL
-pffloat		EXTERNAL
-strlen		EXTERNAL
+_pflong		EXTERNAL
+_pffloat	EXTERNAL
+_strlen		EXTERNAL
 __iob		EXTERNAL
+
 			pshs  u 
-			leau  2+2+2,s 
-			leax  __iob+13,y 			get pointer to stdout FILE structure
-			ldd   2+2,s					get format string
+			leau  2+2+2,s                   point U to parameters referenced by format string
+			leax  __iob+13,y                get pointer to stdout FILE structure
+			ldd   2+2,s			            get format string
 			bra   L0014 
 	}
 }
@@ -45,11 +39,11 @@ fprintf(FILE *fp, char *fmt, ...)
     asm
     {
 			pshs  u 
-			leau  2+2+4,s 
+			leau  2+2+4,s                   point U to parameters referenced by format string
 			ldx   2+2,s 					get FILE ptr param
 			ldd   2+2+2,s 					get format string
-L0014		stx   0,y						push FILE ptr on stack 
-			leax  putc_character,pcr    	ptr to output routine
+L0014		stx   _fpmp,y					save FILE ptr to static
+			leax  >put_to_file,pcr       	ptr to output routine
 			bra   L002e 
  	}
  }
@@ -60,292 +54,368 @@ sprintf(char *str, char *fmt, ...)
 {
     asm
     {
-		pshs  u 
-		ldd   2+2,s                         get destination string
-		std   0,y
-		leau  8,s 
-		ldd   2+2+2,s                       get format string
-		leax  sprintf_character,pcr         ptr to output routine
-L002e 	pshs  d,u 
-		pshs  x 
-		bsr   L003b 
-		leas  6,s 
-		puls  u,pc 
-L0038 	leas  8,s 
+		pshs    u 
+		ldd     2+2,s                       get destination string
+		std     _fpmp,y
+        clr     [_fpmp,y]                   write an initial zero to the buffer
+		leau    2+2+4,s                     point U to parameters referenced by format string
+		ldd     2+2+2,s                     get format string
+		leax    >put_to_mem,pcr             ptr to output routine
+L002e 	pshs    d,u                         stack *expr and *fmt string
+		pshs    x 
+		bsr     printf_common 
+		leas    6,s 
+		puls    u,pc 
+		
+
+*       local offsets
+vstart  set         0
+fraccnt set         0           ; 2 frac cnt for strings and floats
+fracflg set         2           ; 1
+fldsiz  set         3           ; 2 field width
+upflg   set         5           ; 1 upper case in hex and floats
+fill    set         6           ; 1 fill character
+ljust   set         7           ; 1 if left just string
+vlen    set         8
+*        rmb         2 ret addr
+prthnd  set         10          ; 2
+prtfmt  set         12          ; 2
+prtvar  set         14          ; 2
+
+printf_common_exit
+     	leas    vlen,s 
  		rts    
-L003b 	ldu   4,s 
- 		leas  -8,s 
- 		bra   L004a 
-L0041 	ldx   14,s 
- 		ldd   ,x++ 
- 		stx   14,s 
-L0047 	jsr   [10,s] 
-L004a 	ldb   ,u+ 
- 		beq   L0038 
- 		cmpb  #$25 
- 		bne   L0047 
+
+*    entry:  variables  fpmp  destination - string address or FILE pointer
+*            stack            file or memory pointer (2)
+*                             expr list start (2)
+*                             format string pnt (2)
+*                             handler addr (2)
+*                             return (2)
+*       local:                u (2)
+*                             ljust (1)
+*                             fill (1)
+*                             upper case flag (1)
+*                             field width (2)
+*                             fraction spec flag (1)
+*                             fraction count (2)
+printf_common
+ 	    ldu     4,s             get format string
+ 		leas    -vlen,s         make room on stack
+ 		bra     L004a 
+case_c 	ldx     prtvar,s 
+ 		ldd     ,x++ 
+ 		stx     prtvar,s 
+L0047 	
+        jsr     [prthnd,s]      all handler
+L004a 	ldb     ,u+             get next character from format
+ 		beq     printf_common_exit 
+ 		cmpb    #'%'
+ 		bne     L0047 
  		clrb   
- 		lda   #$7d 
- 		std   ,s 
- 		stb   7,s 
- 		stb   2,s 
-		ldb   ,u+ 
-		cmpb  #$2d 
-		bne   L0065 
-		stb   7,s 
-		ldb   ,u+ 
-L0065 	cmpb  #$30 
-		beq   L006b 
-		ldb   #$20 
-L006b 	stb   6,s 
-		ldb   -1,u 
-		lbsr  L021f 
-		std   3,s 
-		ldb   ,u+ 
-		cmpb  #$2e 
-		bne   L0085 
-		stb   2,s 
-		ldb   ,u+ 
-		lbsr  L021f 
-		std   ,s 
-		ldb   ,u+ 
-L0085 	cmpb  #$63 
-		beq   L0041 
-		pshs  u 
-		cmpb  #$66 
-		beq   L00c5 
-		cmpb  #$65 
-		beq   L00c5 
-		cmpb  #$67 
-		beq   L00c5 
-		cmpb  #$45 
-		beq   L00c5 
-		cmpb  #$47 
-		beq   L00c5 
-		cmpb  #$6c 
-		beq   L00e6 
-		cmpb  #$73 
-		beq   L0108 
-		cmpb  #$64 
-		beq   L0124 
-		cmpb  #$6f 
-		lbeq  L01ca 
-		cmpb  #$78 
-		lbeq  L0182 
-		cmpb  #$58 
-		lbeq  L0182 
-		cmpb  #$75 
-		beq   L0137 
-		puls  u 
-		bra   L0047 
-L00c5 	ldd   5,s 
-		pshs  d 
-		leax  18,s 
-		ldd   4,s 
-		tst   6,s 
-		bne   L00d5 
-		ldd   #6 
-L00d5 	pshs  d,x 
-		ldd   #$7d00 
-		std   8,s 
-		ldb   -1,u 
+ 		lda     #$7D            32,000 chars
+ 		std     ,s 
+ 		stb     ljust,s         assume no left justification
+ 		stb     fracflg,s       assume no factional part
+		ldb     ,u+             get next character
+		cmpb    #'-'
+		bne     L0065 
+		stb     ljust,s         set left justification
+		ldb     ,u+ 
+L0065 	cmpb    #'0'
+		beq     L006b 
+		ldb     #' '
+L006b 	stb     fill,s 
+		ldb     -1,u 
+		lbsr    getdec          always try for fldsiz
+		std     fldsiz,s 
+		ldb     ,u+ 
+		cmpb    #'.'
+		bne     switch 
+		stb     2,s 
+		ldb     ,u+ 
+		lbsr    getdec 
+		std     ,s 
+		ldb     ,u+ 
+switch 	cmpb    #'c'            char
+		beq     case_c 
+		pshs    u 
+		cmpb    #'f'            double (normal)
+		beq     case_f 
+		cmpb    #'e'            float (double in scientific)
+		beq     case_f 
+		cmpb    #'g'            shorter of e or f 
+		beq     case_f 
+		cmpb    #'E'            with uppercase e 
+		beq     case_f 
+		cmpb    #'G'            with uppercase g 
+		beq     case_f 
+		cmpb    #'l'            long decimal or hex
+		beq     case_l 
+		cmpb    #'s'            string 
+		beq     case_s 
+		cmpb    #'d'            decimal 
+		beq     case_d 
+		cmpb    #'o'            octal 
+		lbeq    case_o 
+		cmpb    #'h'            hex 
+		lbeq    case_h 
+		cmpb    #'H'            hex 
+		lbeq    case_h 
+		cmpb    #'u'            unsigned 
+		beq     case_u 
+		puls    u               get format string
+		bra     L0047           default -- just print
+
+* print a float
+case_f 	ldd     fldsiz+2,s 
+		pshs    d               stack field width
+		leax    prtvar+4,s 
+		ldd     fraccnt+4,s 
+		tst     fracflg+4,s 
+		bne     case_f1 
+		ldd     #6 
+case_f1 pshs    d,x             stack precision & *variable
+		ldd     #$7d00 
+		std     fraccnt+8,s     wipe old value
+		ldb     -1,u 
 		clra   
-		pshs  d 
-		lbsr  pffloat 
-		bra   L0101 
-L00e6 	pshs  u 
-		ldx   18,s 
-		ldd   2,x 
-		pshs  d 
-		ldd   ,x 
-		pshs  d 
-		leax  4,x 
-		stx   22,s 
-		ldb   ,u+ 
-		stu   6,s 
-		pshs  d 
-		lbsr  pflong 
-L0101 	leas  8,s 
-		tfr   d,u 
-		lbra  L01b4 
-L0108 	bsr   L0179 
-		tfr   d,u 
-		pshs  u 
-		lbsr  strlen 
-		leas  2,s 
-		tst   4,s 
-		beq   L011e 
-		cmpd  2,s 
-		bhi   L011e 
- 		std   2,s 
-L011e 	lbsr  L01e9 
- 		lbra  L01b6 
-L0124 	bsr   L0175 
-		pshs  d,x,y,u 
+		pshs    d 
+		lbsr    _pffloat 
+		lbra    case_x8 
+
+* print a long
+case_l 	pshs    u               extra space
+		ldx     prtvar+4,s 
+		ldd     2,x 
+		pshs    d               stack lsw 
+		ldd     ,x 
+		pshs    d               stack msw
+		leax    4,x 
+		stx     prtvar+8,s      update *variable
+		ldb     ,u+             get print spec 
+		stu     6,s             patch up line pointer
+		pshs    d               print spec (d,x)
+		lbsr    _pflong 
+case_l2 leas    8,s             clean up our earlier pushes
+		tfr     d,u 
+		lbra    case_x8 
+
+* print a string
+case_s 	bsr     load_reg1       get *s in D 
+		tfr     d,u             transfer to U
+		pshs    u 
+		lbsr    _strlen 
+		leas    2,s 
+		tst     fracflg+2,s    
+		beq     L011e           no string trunc
+		cmpd    fraccnt+2,s 
+		bhi     L011e           if len(s) > fractional count
+ 		std     fraccnt+2,s     update to shorter value 
+L011e 	lbsr    L01e9           D has chars to print 
+ 		lbra    L01b6           clean up 
+
+* print signed decimal
+case_d 	bsr     load_regs 
+		pshs    d,x,y,u 
 		tsta   
-		bpl   L013b 
+		bpl     L013b 
 		nega   
 		negb   
-		sbca  #0 
-		std   ,s 
-		ldb   #$2d 
-		stb   ,u+ 
-		bra   L013b 
-L0137 	bsr   L0175 
- 		pshs  d,x,y,u 
-L013b 	ldd   #5 
-		std   2,s 
-		sta   4,s 
-		leax  0,y 
-		puls  d 
-		bra   L0167 
-L014a 	inc   ,s 
-L014c 	subd  ,x 
-		bcc   L014a 
-		addd  ,x++ 
-		pshs  b 
-		ldb   1,s 
-		tst   3,s 
-		bne   L015f 
-		tstb   
-		beq   L0163 
-		inc   3,s 
-L015f 	addb  #$30 
- 		stb   ,u+ 
-L0163 	clr   1,s 
- 		puls  b 
-L0167 	dec   1,s 
-		bne   L014c 
-		addb  #$30 
-		stb   ,u+ 
-		clr   ,u 
-		leas  4,s 
-		bra   L01b2 
-L0175 	leau  2,y 
-L0179 	ldx   18,s 
-		ldd   ,x++ 
-		stx   18,s 
+		sbca    #0 
+		std     ,s               overwrite with new
+		ldb     #'-'
+		stb     ,u+ 
+		bra     L013b 
+
+* print unsigned decimal
+case_u 	bsr     load_regs 
+ 		pshs    d,x,y,u 
+L013b 	ldd     #5 
+		std     2,s              digit, count               
+		sta     4,s 
+		leax    _dectbl,y 
+		puls    d 
+		bra     L0167 
+		
+L014a 	inc     ,s 
+L014c 	subd    ,x 
+		bcc     L014a 
+		addd    ,x++ 
+		pshs    b 
+		ldb     1,s             get count
+		tst     3,s             non zero yet?
+		bne     L015f 
+		tstb                    is this non zero? 
+		beq     L0163 
+		inc     3,s 
+L015f 	addb    #'0'
+ 		stb     ,u+ 
+L0163 	clr     1,s 
+ 		puls    b 
+L0167 	dec     1,s 
+		bne     L014c 
+		addb    #$30 
+		stb     ,u+ 
+		clr     ,u 
+		leas    4,s              clean off temps
+		bra     L01b2 
+		
+* point U at buffer, get a number in D
+load_regs
+     	leau    _buf1,y 
+load_reg1
+     	ldx     prtvar+4,s 
+		ldd     ,x++ 
+		stx     prtvar+4,s 
 		rts    
-L0182 	andb  #$20 
-		stb   7,s 
-		bsr   L0175 
-		pshs  d,u 
-L018a 	andb  #$0f 
-		pshs  b 
-		lda   #$30 
-		cmpb  #9 
-		ble   L0198 
-		lda   #$37 
-		adda  12,s 
-L0198 	adda  ,s+ 
-		sta   ,u+ 
-		ldd   ,s 
-		lsra   
+
+* print a hex number
+case_h 	andb    #$20                lower case bit 
+		stb     upflg+2,s           true if lower case
+		bsr     load_regs 
+		pshs    d,u                 n, *s
+L018a 	andb    #$0f 
+		pshs    b 
+		lda     #'0'
+		cmpb    #9 
+		ble     L0198 
+		lda     #'A'-10
+		adda    upflg+7,s 
+L0198 	adda    ,s+ 
+		sta     ,u+ 
+		ldd     ,s 
+		lsra                        /2  
 		rorb   
-		lsra   
+		lsra                        /4
 		rorb   
-		lsra   
+		lsra                        /8  
 		rorb   
-		lsra   
+		lsra                        /16
 		rorb   
-		std   ,s 
-		bne   L018a 
-L01aa	 clr   ,u 
-		ldx   2,s 
-		bsr   frevers 
-		leas  2,s 
-L01b2 	puls  u 
-L01b4 	bsr   L01e2 
-L01b6 	puls  u 
- 		lbra  L004a 
-L01bb 	ldb   ,x 
-		lda   ,-u 
-		sta   ,x+ 
-		stb   ,u 
-frevers: pshs  u 
-		cmpx  ,s++ 
-		bcs   L01bb 
+		std     ,s 
+		bne     L018a 
+
+* entry for octal
+L01aa	clr     ,u 
+		ldx     2,s 
+		bsr     frevers 
+		leas    2,s                 clean off number
+
+* entry for decimal & unsigned
+L01b2 	puls    u                   *our string
+
+* entry for float and long
+case_x8 bsr     fmt_prt 
+L01b6 	puls    u                   *format string
+ 		lbra    L004a               .. and go for more
+ 		
+* reverse a string
+frev1 	ldb     ,x 
+		lda     ,-u 
+		sta     ,x+ 
+		stb     ,u 
+
+frevers EXPORT
+frevers: pshs   u 
+		cmpx    ,s++ 
+		bcs     frev1 
 		rts    
-L01ca 	bsr   L0175 
- 		pshs  d,u 
-L01ce 	andb  #7 
-		addb  #$30 
-		stb   ,u+ 
-		ldd   ,s 
-		lsra   
+
+* print an octal number
+case_o 	bsr     load_regs 
+ 		pshs    d,u 
+L01ce 	andb    #7 
+		addb    #'0' 
+		stb     ,u+ 
+		ldd     ,s 
+		lsra                        /2  
 		rorb   
-		lsra   
+		lsra                        /4
 		rorb   
-		lsra   
+		lsra                        /8
 		rorb   
 		std   ,s 
 		bne   L01ce 
 		bra   L01aa 
-L01e2 	pshs  u 
-		lbsr  strlen 
-		leas  2,s 
+
+* universal formatter
+* expects u = *s
+fmt_prt	pshs    u 
+		lbsr    _strlen 
+		leas    2,s 
 L01e9 	nega   
 		negb   
-		sbca  #0 
-		addd  7,s 
-		std   7,s 
-		tst   11,s 
-		bne   L0200 
-		bsr   L0215 
-		bra   L0200 
-L01f9 	ldb   ,u+ 
-		beq   L0209 
-		jsr   [14,s] 
-L0200 	ldd   4,s 
-		subd  #1 
-		std   4,s 
-		bpl   L01f9 
-L0209 	tst   11,s 
-		beq   L020f 
-		bsr   L0215 
+		sbca    #0 
+		addd    7,s                   compute number of blanks 
+		std     7,s 
+		tst     11,s 
+		bne     L0200                 if want left justification 
+		bsr     L0215                 lead blanks
+		bra     L0200 
+L01f9 	ldb     ,u+ 
+		beq     L0209 
+		jsr     [14,s] 
+L0200 	ldd     4,s 
+		subd    #1 
+		std     4,s 
+		bpl     L01f9 
+L0209 	tst     11,s 
+		beq     L020f 
+		bsr     L0215 
 L020f 	rts    
-L0210 	ldb   12,s 
- 		jsr   [16,s] 
-L0215 	ldd   9,s 
-		subd  #1 
-		std   9,s 
-		bpl   L0210 
+
+* put out (fldsiz) blanks
+L0210 	ldb     12,s 
+ 		jsr     [16,s] 
+L0215 	ldd     9,s 
+		subd    #1 
+		std     9,s 
+		bpl     L0210 
 		rts    
-L021f 	clr   ,-s 
-		clr   ,-s 
-		leau  -1,u 
-		leax  _chcodes,y 
-		bra   L0242 
-L022b 	ldd   ,s 
+		
+* converts decmimal ascii into hex
+* expects u -> next char
+*         b = first char
+getdec 	clr     ,-s 
+		clr     ,-s 
+		leau    -1,u                 back up to char
+		leax    _chcodes,y 
+		bra     getdec2 
+getdec1	ldd     ,s 
 		lslb   
 		rola   
-		std   ,s 
+		std     ,s 
 		lslb   
 		rola   
 		lslb   
 		rola   
-		addd  ,s 
-		addb  ,u+ 
-		adca  #0 
-		subd  #$0030 
-		std   ,s 
-		ldb   ,u 
-L0242 	lda   b,x 
-		anda  #8 
-		bne   L022b 
-		puls  d,pc 
-putc_character
-     	ldx   0,y 
-		pshs  d,x 
-		lbsr  putc 
-		leas  4,s 
+		addd    ,s 
+		addb    ,u+ 
+		adca    #0 
+		subd    #$0030 
+		std     ,s 
+		ldb     ,u 
+getdec2	lda     b,x 
+_DIGIT  equ     $08
+		anda    #_DIGIT
+		bne     getdec1 
+		puls    d,pc 
+		
+* B = character to put
+put_to_file
+     	ldx     _fpmp,y 
+		pshs    d,x 
+		lbsr    putc 
+		leas    4,s 
 		rts    
 
-* routine to copy character from B to X
-sprintf_character
-     	ldx   0,y 
-		stb   ,x+ 
-		stx   0,y 
-		clr   ,x 
+* B = character to put
+put_to_mem
+     	ldx     _fpmp,y 
+		stb     ,x+ 
+		stx     _fpmp,y 
+		clr     ,x
+		rts
 	}
 }
