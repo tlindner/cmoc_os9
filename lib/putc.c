@@ -6,18 +6,18 @@ putc(int c, FILE *stream)
 {
     asm
     {
+* 0,s  = return address
+* 2,s  = character
+* 4,s  = FILE *
 __iob	EXTERNAL
-__os_seek	EXTERNAL
+__os_write	EXTERNAL
 __os_writeln	EXTERNAL
 __os_close	EXTERNAL
 _setbase	EXTERNAL
-ftell	EXTERNAL
-lseek	EXTERNAL
-__os_write	EXTERNAL
 _ftell	EXTERNAL
 
 		pshs  u 
-		ldu   2+2+2,s 		get FILE ptr
+		ldu   2+4,s 		get FILE ptr
 		ldd   6,u 			get _flag offset in FILE
 		anda  #$80          mask out all but _INIT flag
 		andb  #_ERR|_WRITE  mask out all but _ERR and _WRITE flags
@@ -36,7 +36,7 @@ inited 	ldd   6,u           get _flag pointer in FILE
 		pshs  d 			push count on stack
         leax  ,s			point X to count
         pshs  x				push pointer
-		leax  4+2+2+1,s	    point to character
+		leax  6+2+1,s	    point to character
 		ldd   8,u			get _fd path in FILE			 
 		pshs  d,x 			push path and pointer to char
 		ldb   7,u           get _flag word in FILE 
@@ -64,7 +64,7 @@ buffered
 L0058 	ldx   ,u            get _ptr of FILE *
 		ldb   2+2+1,s       get character           
 		stb   ,x+ 
-		stx   ,u            save updated pointer
+		stx   ,u            save updated pointer to _ptr
 		cmpx  4,u           _end ?
 		bcc   L0070         branch if not
 		ldb   7,u           get _flag+1
@@ -96,6 +96,11 @@ putw(int w, FILE *stream)
 		stb   1,s               save in stack location
 		lbsr  putc              put it
 		leas  4,s               clean up stack
+		cmpd  #-1               error?
+		beq                     putwbye
+		clra
+		clrb
+putwbye
 		puls  u,pc 
 
 _tidyup: 
@@ -200,9 +205,9 @@ _lseek  EXTERNAL
 		leas  8,s           clean stack
 L012c 	ldd   ,u            get _ptr
 		subd  2,u           subtract _base
-		std   2,s 
+		std   2,s           save on stack
 		lbeq  L0194         if none
-		ldd   6,u 
+		ldd   6,u           get _flag word 
 		anda  #1            _WRITTEN
 		lbeq  L0194         branch if not written
 		andb  #_SCF
@@ -217,20 +222,20 @@ _flush2
      	pshs  x 			push pointer
 		ldd   ,u 			get address of data to write
 		pshs  d 			push on stack
-		ldd   8,u 			get path
+		ldd   8,u 			get _fd
 		pshs  d 			push on stack
 		lbsr  __os_writeln 	write it
 		leas  10,s 			restore stack
 		cmpd  #0			success? 
 		bne   L0185 		branch if not
-		ldd   2,s 
-		subd  ,s 
-		std   2,s 
-		ldd   ,u 
-		addd  ,s 
-_flush3	std   ,u 
-		ldd   2,s 
-		bne   _flush2 
+		ldd   2,s           get _ptr minus _base computed earlier 
+		subd  -4,s          subtract from amount written
+		std   2,s           write back to stack
+		ldd   ,u            get _ptr
+		addd  -4,s          add amount written
+_flush3	std   ,u            udpate _ptr
+		ldd   2,s           get _ptr minus _base computed earlier
+		bne   _flush2       branch if not zero
 		bra   L0194 
 		
 * flush RBF device

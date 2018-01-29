@@ -158,9 +158,9 @@ switch 	cmpb    #'c'            char
 		beq     case_d 
 		cmpb    #'o'            octal 
 		lbeq    case_o 
-		cmpb    #'h'            hex 
+		cmpb    #'x'            hex 
 		lbeq    case_h 
-		cmpb    #'H'            hex 
+		cmpb    #'X'            hex 
 		lbeq    case_h 
 		cmpb    #'u'            unsigned 
 		beq     case_u 

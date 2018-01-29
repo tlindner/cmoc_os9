@@ -11,7 +11,7 @@ __memend EXTERNAL
 __mtop EXTERNAL
 __stbot EXTERNAL
 
-        ldd     __memend,y        get top of data area
+        ldd     __memend,y      get top of data area
         pshs    d               save on stack for now
         ldd     2+2,s           get parameter (amount to increase)
         cmpd    _spare,y        compare to spare (initially set to zero)
@@ -28,7 +28,7 @@ __stbot EXTERNAL
         ldd     #-1             else error
         leas    2,s             recover stack
         rts                     return
-L0027   std     __memend,y        save new memory area upper bound in memend
+L0027   std     __memend,y      save new memory area upper bound in memend
         addd    _spare,y        add to spare
         subd    ,s              subtract saved memend at start of call
         std     _spare,y        and update spare to that
@@ -38,13 +38,13 @@ L0035   leas    2,s             eat D saved on stack earlier
         subd    2+2,s           subtract increase from it to get new spare
         std     _spare,y        store updated value in spare
 * clear newly reserved area
-        ldd     __memend,y        get memend
+        ldd     __memend,y      get memend
         subd    ,s++            subtract old spare saved on stack
         pshs    d               save D on stack
         clra                    clear A
         ldx     ,s              get 2 bytes on stack into X
 clr@    sta     ,x+             write 0 to location and increment
-        cmpx    __memend,y        end of memory?
+        cmpx    __memend,y      end of memory?
         bcs     clr@            branch if not
         puls    d,pc 
      }

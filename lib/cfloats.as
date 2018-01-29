@@ -888,6 +888,29 @@ push5ByteStruct EXPORT
 push5ByteStruct
 	rts
 
+initWordFromDWord EXPORT
+; Input: X => destination word; D => source dword.
+; Preserves X. Trashes D.
+;
+initWordFromDWord
+        pshs    u
+        tfr     d,u
+        ldd     2,u             ; low word of source dword
+        std     ,x
+        puls    u,pc
+
+copyDWord EXPORT
+; Input: X = destination address; D = source address.
+; Preserves X. Trashes D.
+copyDWord
+        pshs    u
+        tfr     d,u             ; source address
+        ldd     ,u              ; high word
+        std     ,x
+        ldd     2,u             ; low word
+        std     2,x
+        puls    u,pc
+
 incrementDWord EXPORT
 incrementDWord
 	rts
