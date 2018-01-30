@@ -15,6 +15,7 @@ typedef int path_id;
 #define  S_IOWRITE 0x10         /* public write */
 #define  S_IOEXEC  0x20         /* public execute */
 #define  S_ISHARE  0x40         /* sharable */
+#define  S_DIR     0x80         /* directory */
 
 /* _os style file access modes */
 #define	FAM_READ	S_IREAD

@@ -1,7 +1,7 @@
 #include "fcntl.h"
 
 
-asm int
+asm error_code
 _os_create(char *pathname, int mode, path_id *path, int perm)
 {
 	asm
@@ -236,6 +236,13 @@ _os_seek(path_id path, long position)
 *	2,s = path
 *	4,s = MSW of 32-bit position
 *   6,s = LSW of 32-bit position
+		pshs 		d,x,u
+		ldu         4+4,s
+		ldx         4+6,s
+		lda         4+2+1,s
+        os9         I$Seek
+        puls        d,x,u
+        lbra        _osret
     }
 }
 

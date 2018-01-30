@@ -14,20 +14,20 @@ void test_modlink_modunlink()
     error_code result = _os_modlink(module, lang, type, &modaddr);
 	if (result == 0)
 	{
-	    printf("%s [PASS] _os_modlink(%s, %d, %d, [%04X]) = %d\n", __func__, module, lang, type, modaddr, result);
+	    printf("%s [PASS] _os_modlink(\"%s\", %d, %d, [%X]) = %d\n", __func__, module, lang, type, modaddr, result);
         result = _os_modunlink(modaddr);
         if (result == 0)
         {
-            printf("%s [PASS] _os_modunlink($%04X) = %d\n", __func__, modaddr, result);
+            printf("%s [PASS] _os_modunlink($%X) = %d\n", __func__, modaddr, result);
         }
         else
         {
-            printf("%s [FAIL] _os_modunlink($%04X) = %d\n", __func__, modaddr, result);
+            printf("%s [FAIL] _os_modunlink($%X) = %d\n", __func__, modaddr, result);
         }
     }
     else
     {
-	    printf("%s [FAIL] _os_modlink(%s, %d, %d, [%04X]) = %d\n", __func__, module, lang, type, modaddr, result);
+	    printf("%s [FAIL] _os_modlink(\"%s\", %d, %d, [%X]) = %d\n", __func__, module, lang, type, modaddr, result);
     }
 }
 
@@ -44,21 +44,21 @@ void test_fork()
     error_code result = _os_fork(module, paramsize, paramaddr, lang, type, datasize, &pid);
     if (result == 0)
     {
-        printf("%s [PASS] _os_fork(\"%s\", %d, $%02X, $%02X, $%02X, %d, [$%04X]) = %d\n", __func__, module, paramsize, paramaddr, lang, type, datasize, &pid, result);
+        printf("%s [PASS] _os_fork(\"%s\", %d, $%X, $%X, $%X, %d, [$%X]) = %d\n", __func__, module, paramsize, paramaddr, lang, type, datasize, &pid, result);
         int pid;
         result = _os_wait(&pid);
         if (result == 0)
         {
-            printf("%s [PASS] _os_wait($%04X) = %d\n", __func__, &pid, result);
+            printf("%s [PASS] _os_wait($%X) = %d\n", __func__, &pid, result);
         }
         else
         {
-            printf("%s [FAIL] _os_wait($%04X) = %d\n", __func__, &pid, result);
+            printf("%s [FAIL] _os_wait($%X) = %d\n", __func__, &pid, result);
         }
     }
     else
     {
-        printf("%s [FAIL] _os_fork(\"%s\", %d, $%02X, $%02X, $%02X, %d, [$%04X]) = %d\n", __func__, module, paramsize, paramaddr, lang, type, datasize, &pid, result);
+        printf("%s [FAIL] _os_fork(\"%s\", %d, $%X, $%X, $%X, %d, [$%X]) = %d\n", __func__, module, paramsize, paramaddr, lang, type, datasize, &pid, result);
     }
 }
 

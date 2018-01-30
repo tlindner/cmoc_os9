@@ -22,7 +22,7 @@ dsk:	all
 
 
 run:	dsk
-	mame64 -inipath ~/Documents/mame -video opengl -window coco3 -flop1 $(NITROS9DIR)/level2/coco3/NOS9_6809_L2_v030300_coco3_80d.dsk -flop2 test.dsk -speed 4
+	mame64 -inipath ~/Documents/mame -video opengl -window coco3 -flop1 nos9.dsk -flop2 test.dsk -speed 4 &
 
 clean:
 	-rm $(TESTS) test.dsk go

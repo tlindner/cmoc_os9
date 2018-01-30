@@ -16,7 +16,7 @@ void test_os_create_and_delete_file()
 	error_code result = _os_create(file, mode, &path, perms);
 	if (result == 0)
 	{
-		printf("%s [PASS] _os_create(\"%s\", %d, [%d], %2x) = %d\n", __func__, file, mode, path, perms, result);
+		printf("%s [PASS] _os_create(\"%s\", %d, [%d], %x) = %d\n", __func__, file, mode, path, perms, result);
 		int result = _os_close(path);
 		if (result == 0)
 		{
@@ -26,11 +26,11 @@ void test_os_create_and_delete_file()
 			result = _os_delete(file, mode);
 			if (result == 0)
 			{
-				printf("%s [PASS] _os_delete(\"%s\", %2x) = %d\n", __func__, file, mode, result);
+				printf("%s [PASS] _os_delete(\"%s\", %x) = %d\n", __func__, file, mode, result);
 			}
 			else
 			{
-				printf("%s [FAIL] _os_delete(\"%s\", %2x) = %d\n", __func__, file, mode, result);
+				printf("%s [FAIL] _os_delete(\"%s\", %x) = %d\n", __func__, file, mode, result);
 			}
 		}
 		else
@@ -40,7 +40,7 @@ void test_os_create_and_delete_file()
 	}
 	else
 	{
-		printf("%s [FAIL] _os_create(\"%s\", %d, [%d], %2x) = %d\n", __func__, file, mode, path, perms, result);
+		printf("%s [FAIL] _os_create(\"%s\", %d, [%d], %x) = %d\n", __func__, file, mode, path, perms, result);
 	}
 }
 
@@ -53,11 +53,11 @@ void test_os_open_nonexistent_file()
 	int result = _os_open(file, mode, &path);
 	if (result != 0)
 	{
-		printf("%s [PASS] _os_open(\"%s\", %2x, [%d]) = %d\n", __func__, file, mode, path, result);
+		printf("%s [PASS] _os_open(\"%s\", %x, [%d]) = %d\n", __func__, file, mode, path, result);
 	}
 	else
 	{
-		printf("%s [FAIL] _os_open(\"%s\", %2x, [%d]) = %d\n", __func__, file, mode, path, result);
+		printf("%s [FAIL] _os_open(\"%s\", %x, [%d]) = %d\n", __func__, file, mode, path, result);
 	}
 }
 
@@ -69,11 +69,11 @@ void test_os_delete_nonexistent_file()
 	int result = _os_delete(file, mode);
 	if (result != 0)
 	{
-		printf("%s [PASS] _os_delete(\"%s\", %2x) = %d\n", __func__, file, mode, result);
+		printf("%s [PASS] _os_delete(\"%s\", %x) = %d\n", __func__, file, mode, result);
 	}
 	else
 	{
-		printf("%s [FAIL] _os_delete(\"%s\", %2x) = %d\n", __func__, file, mode, result);
+		printf("%s [FAIL] _os_delete(\"%s\", %x) = %d\n", __func__, file, mode, result);
 	}
 }
 
@@ -95,7 +95,7 @@ void test_os_create_and_seek()
 	int result = _os_create(file, mode, &path, perms);
 	if (result == 0)
 	{
-		printf("%s [PASS] _os_create(\"%s\", %2x, [%d], %d) = %d\n", __func__, file, mode, path, perms, result);
+		printf("%s [PASS] _os_create(\"%s\", %x, [%d], %d) = %d\n", __func__, file, mode, path, perms, result);
 		char *message = "this is a line of text\n";
 		int length = strlen(message);
 		result = _os_writeln(path, message, &length);
@@ -110,7 +110,7 @@ void test_os_create_and_seek()
 				char buf[32];
 				int readsize = 2;
 				
-				printf("%s [PASS] _os_seek(%d, %l) = %d\n", __func__, path, offset, result);
+				printf("%s [PASS] _os_seek(%d, %ld) = %d\n", __func__, path, offset, result);
 				result = _os_read(path, buf, &readsize);
 				if (2 == readsize && buf[0] == 'i' && buf[1] == 's')
 				{
@@ -124,7 +124,7 @@ void test_os_create_and_seek()
 			}
 			else
 			{
-				printf("%s [FAIL] _os_seek(%d, %l) = %d\n", __func__, path, offset, result);
+				printf("%s [FAIL] _os_seek(%d, %ld) = %d\n", __func__, path, offset, result);
 			}
 			_os_close(path);
 			_os_delete(file, FAM_READ);
@@ -136,7 +136,7 @@ void test_os_create_and_seek()
 	}
 	else
 	{
-		printf("%s [FAIL] _os_create(\"%s\", %2x, [%d], %d) = %d\n", __func__, file, mode, path, perms, result);
+		printf("%s [FAIL] _os_create(\"%s\", %x, [%d], %d) = %d\n", __func__, file, mode, path, perms, result);
 	}
 }
 
@@ -144,11 +144,31 @@ void test_os_make_directory()
 {
 	char *file = "newdirectory";
 
-	int perm = FAP_READ | FAP_WRITE | FAP_PREAD;
+	int perm = FAP_READ | FAP_WRITE | FAP_EXEC | FAP_PREAD | FAP_PWRITE | FAP_PEXEC;
 	int result = _os_makdir(file, perm);
 	if (result == 0)
 	{
 		printf("%s [PASS] _os_makdir(\"%s\", %d) = %d\n", __func__, file, perm, result);
+		perm = FAP_READ | FAP_WRITE | FAP_PREAD | FAP_PWRITE;
+		int result = _os_ss_attr(file, perm);
+		if (result == 0)
+		{
+			printf("%s [PASS] _os_ss_attr(\"%s\", %d) = %d\n", __func__, file, perm, result);
+			int mode = FAM_READ;
+			result = _os_delete(file, mode);
+			if (result == 0)
+			{
+    			printf("%s [PASS] _os_delete(\"%s\", %d) = %d\n", __func__, file, mode, result);
+			}
+			else
+			{
+    			printf("%s [FAIL] _os_delete(\"%s\", %d) = %d\n", __func__, file, mode, result);
+			}
+		}
+		else
+		{
+			printf("%s [FAIL] _os_ss_attr(\"%s\", %d) = %d\n", __func__, file, perm, result);
+		}
 	}
 	else
 	{
@@ -166,13 +186,23 @@ void test_os_make_and_attr_file()
 	int result = _os_create(file, mode, &path, perm);
 	if (result == 0)
 	{
-		printf("%s [PASS] _os_create(\"%s\", %2x, [%d], %d) = %d\n", __func__, file, mode, path, perm, result);
+		printf("%s [PASS] _os_create(\"%s\", %x, [%d], %d) = %d\n", __func__, file, mode, path, perm, result);
 		_os_close(path);
 		perm = FAP_READ | FAP_WRITE | FAP_PREAD | FAP_PWRITE;
 		int result = _os_ss_attr(file, perm);
 		if (result == 0)
 		{
 			printf("%s [PASS] _os_ss_attr(\"%s\", %d) = %d\n", __func__, file, perm, result);
+			int mode = FAM_READ;
+			result = _os_delete(file, mode);
+			if (result == 0)
+			{
+    			printf("%s [PASS] _os_delete(\"%s\", %d) = %d\n", __func__, file, mode, result);
+			}
+			else
+			{
+    			printf("%s [FAIL] _os_delete(\"%s\", %d) = %d\n", __func__, file, mode, result);
+			}
 		}
 		else
 		{
@@ -181,7 +211,7 @@ void test_os_make_and_attr_file()
 	}
 	else
 	{
-		printf("%s [FAIL] _os_create(\"%s\", %2x, [%d], %d) = %d\n", __func__, file, mode, path, perm, result);
+		printf("%s [FAIL] _os_create(\"%s\", %x, [%d], %d) = %d\n", __func__, file, mode, path, perm, result);
 	}
 }
 

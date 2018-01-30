@@ -7,6 +7,12 @@ _os_modlink(char *modname, int lang, int type, void **modaddr)
     {
 _oserr  EXTERNAL
 _osret  EXTERNAL
+* stack:
+*	0,s = return address
+*	2,s = module name pointer
+*	4,s = language byte
+*	6,s = type byte
+*	8,s = address of pointer to module address [out]
         pshs    y,u 
         ldx     4+2,s         get pointer to module name
         lda     4+4+1,s       get lang byte
@@ -29,6 +35,12 @@ _os_modload(char *modname, int lang, int type, void **modaddr)
 {
     asm
     {
+* stack:
+*	0,s = return address
+*	2,s = module name pointer
+*	4,s = language byte
+*	6,s = type byte
+*	8,s = address of pointer to module address [out]
         pshs    y,u 
         ldx     4+2,s 
         lda     4+4+1,s 
@@ -47,6 +59,9 @@ _os_modunlink(void *modaddr)
 {
     asm
     {
+* stack:
+*	0,s = return address
+*	2,s = module address
         pshs    u 
         ldu     2+2,s 
         os9     F$UnLink 
