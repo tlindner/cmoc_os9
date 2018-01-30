@@ -25,11 +25,15 @@ _pffloat	EXTERNAL
 _strlen		EXTERNAL
 __iob		EXTERNAL
 
+* stack:
+*	0,s = return address
+*	2,s = format string
+*	4,s = pointer to param
 			pshs  u 
 			leau  2+2+2,s                   point U to parameters referenced by format string
 			leax  __iob+13,y                get pointer to stdout FILE structure
 			ldd   2+2,s			            get format string
-			bra   L0014 
+			bra   printf1 
 	}
 }
 
@@ -38,11 +42,16 @@ fprintf(FILE *fp, char *fmt, ...)
 {
     asm
     {
+* stack:
+*	0,s = return address
+*	2,s = FILE pointer
+*	4,s = format string
+*	6,s = pointer to param
 			pshs  u 
-			leau  2+2+4,s                   point U to parameters referenced by format string
+			leau  2+6,s                     point U to parameters referenced by format string
 			ldx   2+2,s 					get FILE ptr param
-			ldd   2+2+2,s 					get format string
-L0014		stx   _fpmp,y					save FILE ptr to static
+			ldd   2+4,s 					get format string
+printf1		stx   _fpmp,y					save FILE ptr to static
 			leax  >put_to_file,pcr       	ptr to output routine
 			bra   L002e 
  	}
@@ -54,12 +63,16 @@ sprintf(char *str, char *fmt, ...)
 {
     asm
     {
+*	0,s = return address
+*	2,s = destination string
+*	4,s = format string
+*	6,s = pointer to param
 		pshs    u 
 		ldd     2+2,s                       get destination string
 		std     _fpmp,y
         clr     [_fpmp,y]                   write an initial zero to the buffer
-		leau    2+2+4,s                     point U to parameters referenced by format string
-		ldd     2+2+2,s                     get format string
+		leau    2+6,s                       point U to parameters referenced by format string
+		ldd     2+4,s                       get format string
 		leax    >put_to_mem,pcr             ptr to output routine
 L002e 	pshs    d,u                         stack *expr and *fmt string
 		pshs    x 
@@ -114,7 +127,7 @@ L004a 	ldb     ,u+             get next character from format
  		bne     L0047 
  		clrb   
  		lda     #$7D            32,000 chars
- 		std     ,s 
+ 		std     fraccnt,s 
  		stb     ljust,s         assume no left justification
  		stb     fracflg,s       assume no factional part
 		ldb     ,u+             get next character
@@ -132,10 +145,10 @@ L006b 	stb     fill,s
 		ldb     ,u+ 
 		cmpb    #'.'
 		bne     switch 
-		stb     2,s 
+		stb     fracflg,s 
 		ldb     ,u+ 
 		lbsr    getdec 
-		std     ,s 
+		std     fraccnt,s 
 		ldb     ,u+ 
 switch 	cmpb    #'c'            char
 		beq     case_c 
@@ -181,7 +194,8 @@ case_f1 pshs    d,x             stack precision & *variable
 		ldb     -1,u 
 		clra   
 		pshs    d 
-		lbsr    _pffloat 
+		lbsr    _pffloat
+		leas    2,s 
 		lbra    case_x8 
 
 * print a long
@@ -197,6 +211,7 @@ case_l 	pshs    u               extra space
 		stu     6,s             patch up line pointer
 		pshs    d               print spec (d,x)
 		lbsr    _pflong 
+		leas    2,s
 case_l2 leas    8,s             clean up our earlier pushes
 		tfr     d,u 
 		lbra    case_x8 
@@ -255,7 +270,7 @@ L0163 	clr     1,s
  		puls    b 
 L0167 	dec     1,s 
 		bne     L014c 
-		addb    #$30 
+		addb    #'0'
 		stb     ,u+ 
 		clr     ,u 
 		leas    4,s              clean off temps
@@ -347,30 +362,30 @@ fmt_prt	pshs    u
 L01e9 	nega   
 		negb   
 		sbca    #0 
-		addd    7,s                   compute number of blanks 
-		std     7,s 
-		tst     11,s 
+		addd    fldsiz+4,s            compute number of blanks 
+		std     fldsiz+4,s 
+		tst     ljust+4,s 
 		bne     L0200                 if want left justification 
 		bsr     L0215                 lead blanks
 		bra     L0200 
 L01f9 	ldb     ,u+ 
-		beq     L0209 
-		jsr     [14,s] 
-L0200 	ldd     4,s 
+		beq     L0209                   if EOS
+		jsr     [prthnd+4,s]            call handler
+L0200 	ldd     fraccnt+4,s 
 		subd    #1 
-		std     4,s 
-		bpl     L01f9 
-L0209 	tst     11,s 
-		beq     L020f 
-		bsr     L0215 
+		std     fraccnt+4,s 
+		bpl     L01f9                   if not EOS
+L0209 	tst     ljust+4,s 
+		beq     L020f                   if we want left justification 
+		bsr     L0215                   trailing blanks
 L020f 	rts    
 
 * put out (fldsiz) blanks
-L0210 	ldb     12,s 
- 		jsr     [16,s] 
-L0215 	ldd     9,s 
+L0210 	ldb     fill+6,s 
+ 		jsr     [prthnd+6,s]            call handler
+L0215 	ldd     fldsiz+6,s 
 		subd    #1 
-		std     9,s 
+		std     fldsiz+6,s 
 		bpl     L0210 
 		rts    
 		
@@ -383,12 +398,12 @@ getdec 	clr     ,-s
 		leax    _chcodes,y 
 		bra     getdec2 
 getdec1	ldd     ,s 
-		lslb   
+		aslb   
 		rola   
 		std     ,s 
-		lslb   
+		aslb   
 		rola   
-		lslb   
+		aslb   
 		rola   
 		addd    ,s 
 		addb    ,u+ 

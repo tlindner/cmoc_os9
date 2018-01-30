@@ -3,14 +3,12 @@
 #include <fcntl.h>
 #include <assert.h>
 
-char eolchar = '\r';
-
 void test_putc()
 {
 	assert(putc('1', stdout) == '1');
 	assert(putc('2', stdout) == '2');
 	assert(putc('3', stdout) == '3');
-	assert(putc(eolchar, stdout) == eolchar);
+	assert(putc('\n', stdout) == '\n');
 }
 
 void test_putw()
@@ -22,16 +20,17 @@ void test_putw()
 
 void test_printf()
 {
-	printf("printf Hello world!%c", eolchar);
-	printf("printf Hello %s world!%c", "small", eolchar);
-	printf("printf Hello %s %s!%c", "CoCo", "community", eolchar);
+	printf("printf Hello world!\n");
+	printf("printf Hello %s world!\n", "small");
+	printf("printf Hello %s %s!\n", "CoCo", "community");
+	printf("printf Long value is %ld\n", 32L);
 }
 
 void test_fprintf(FILE *fp)
 {
-	fprintf(fp, "fprintf Hello world!%c", eolchar);
-	fprintf(fp, "fprintf Hello %s world!%c", "small", eolchar);
-	fprintf(fp, "fprintf Hello %s %s!%c", "CoCo", "community", eolchar);
+	fprintf(fp, "fprintf Hello world!\n");
+	fprintf(fp, "fprintf Hello %s world!\n", "small");
+	fprintf(fp, "fprintf Hello %s %s!\n", "CoCo", "community");
 }
 
 void test_fopen()
