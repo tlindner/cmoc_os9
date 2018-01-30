@@ -30,7 +30,7 @@ __iob		EXTERNAL
 *	2,s = format string
 *	4,s = pointer to param
 			pshs  u 
-			leau  2+2+2,s                   point U to parameters referenced by format string
+			leau  2+4,s                     point U to parameters referenced by format string
 			leax  __iob+13,y                get pointer to stdout FILE structure
 			ldd   2+2,s			            get format string
 			bra   printf1 
@@ -195,7 +195,7 @@ case_f1 pshs    d,x             stack precision & *variable
 		clra   
 		pshs    d 
 		lbsr    _pffloat
-		leas    2,s 
+		leas    8,s 
 		lbra    case_x8 
 
 * print a long
@@ -211,8 +211,7 @@ case_l 	pshs    u               extra space
 		stu     6,s             patch up line pointer
 		pshs    d               print spec (d,x)
 		lbsr    _pflong 
-		leas    2,s
-case_l2 leas    8,s             clean up our earlier pushes
+        leas    8,s             clean up our earlier pushes
 		tfr     d,u 
 		lbra    case_x8 
 

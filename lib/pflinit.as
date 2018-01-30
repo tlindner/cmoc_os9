@@ -4,8 +4,9 @@
 buf1 rmb 20
  endsect
 
+ section code
 
- section bss
+* section bss
 ldectbl fdb $3b9a,$ca00
  fdb $05f5,$e100
  fdb $0098,$9680
@@ -15,10 +16,9 @@ ldectbl fdb $3b9a,$ca00
  fdb $0000,1000
  fdb $0000,100
  fdb $0000,10
- endsect
+* endsect
 
 
- section code
 
 _pflinit EXPORT
 _pflinit: rts
@@ -28,7 +28,7 @@ _pflong EXPORT
 _pflong: pshs u
  leau buf1,y
  pshs u
- ldb 7,s
+ ldb 4+2+1,s
 switch cmpb #'d
  beq case_d
  cmpb #'o
@@ -88,7 +88,7 @@ case_x3 ldx ,s
 frevers EXTERNAL
  lbsr frevers
  puls d,u,pc
- pag
+
 case_d ldb 8,s
  bpl case_d4
  ldd #0
@@ -110,7 +110,7 @@ case_d1 lbra pflxit
 
 case_d3 ldb #'-
  stb ,u+
-case_d4 leax ldectbl,y
+case_d4 leax ldectbl,pcr
  clra
  ldb #10
  pshs a
