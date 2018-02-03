@@ -1,6 +1,6 @@
 #include <fcntl.h>
 
-asm int
+__norts__ asm int
 abs(int v)
 {
 	asm

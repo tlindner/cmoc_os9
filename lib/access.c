@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <os.h>
 
-asm int
+__norts__ asm int
 access(char *pathname, int mode)
 {
 	asm
@@ -24,7 +24,7 @@ _sysret EXTERNAL
     }
 }
 
-asm int
+__norts__ asm int
 mknod(char *pathname, int mode)
 {
 	asm
@@ -40,7 +40,7 @@ mknod(char *pathname, int mode)
     }
 }
 
-asm int
+__norts__ asm int
 unlinkx(char *pathname, int mode)
 {
 	asm
@@ -55,7 +55,7 @@ unlinkx(char *pathname, int mode)
     }
 }
 
-asm int
+__norts__ asm int
 unlink(char *pathname)
 {
 	asm
@@ -85,6 +85,5 @@ _os9err EXTERNAL
         lbcs    _os9err
         tfr     a,b
         clra
-        rts
     }
 }

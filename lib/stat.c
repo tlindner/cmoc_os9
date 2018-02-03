@@ -1,6 +1,6 @@
 #include <fcntl.h>
 
-asm int
+__norts__ asm int
 getstat(int stat, int path, void *p1, void *p2)
 {
     asm
@@ -41,7 +41,7 @@ gsbye   puls    y,u
 	}
 } 
 
-asm int
+__norts__ asm int
 setstat(int stat, int param)
 {
     asm

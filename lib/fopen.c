@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <os.h>
 
-asm FILE *
+__norts__ asm FILE *
 fdopen(int filedes, char *mode)
 {
     asm
@@ -19,7 +19,7 @@ fdopen(int filedes, char *mode)
 }
 
 
-asm FILE *
+__norts__ asm FILE *
 fopen(char *pathname, char *mode)
 {
     asm
@@ -42,7 +42,7 @@ open1   clra
 }
 
 
-asm FILE *
+__norts__ asm FILE *
 freopen(char *pathname, char *mode, FILE *stream)
 {
     asm
@@ -207,6 +207,5 @@ openit11 pshs       d
         lbsr        open
 openit12 leas       2,s
 openit13 leas       4,s
-        rts
     }
 }

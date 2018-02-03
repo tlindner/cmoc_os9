@@ -1,6 +1,6 @@
 #include <os.h>
 
-asm error_code
+__norts__ asm error_code
 _os9_sleep(int *ticks)
 {
 	asm

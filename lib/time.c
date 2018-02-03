@@ -1,6 +1,6 @@
 #include "time.h"
 
-asm error_code
+__norts__ asm error_code
 _os_getime(_os_time *time)
 {
     asm
@@ -16,7 +16,7 @@ _osret  EXTERN
 }
 
 
-asm error_code
+__norts__ asm error_code
 _os_setime(_os_time *time)
 {
     asm

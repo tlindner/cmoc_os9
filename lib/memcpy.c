@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <string.h>
 
-asm void *
+__norts__ asm void *
 memcpy(void *dst, void *src, size_t len)
 {
 	asm

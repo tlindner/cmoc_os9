@@ -1,7 +1,7 @@
 #include <os.h>
 #include <fcntl.h>
 
-asm int
+__norts__ asm int
 creat(char *path, int mode)
 {
     asm
@@ -50,7 +50,7 @@ _os9err EXTERNAL
 }
 
 
-asm int
+__norts__ asm int
 create(char *path, int mode, int perm)
 {
     asm
@@ -97,6 +97,5 @@ ocreat(char *path, int mode, int perm)
 crret   leas        2,s
         tfr         a,b
         clra
-        rts
     }
 }

@@ -19,7 +19,7 @@
  *    return (0);
  *    }
  */
-asm void *
+__norts__ asm void *
 memccpy(char *s1, char *s2, int c, int n)
 {
 	asm

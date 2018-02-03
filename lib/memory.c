@@ -15,7 +15,7 @@ struct _mallocbase {
 static struct _mallocbase base = {0x0000, 0x0000};
 static int allocp = 0;
 
-asm void *
+__norts__ asm void *
 malloc(size_t size)
 {
     asm
@@ -79,7 +79,7 @@ malloc7 leas    2,s
     }
 }
 
-asm void
+__norts__ asm void
 free(void *ptr)
 {
     asm

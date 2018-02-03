@@ -18,11 +18,10 @@ _os9err EXTERNAL
 
         tfr     a,b
         clra
-        rts
     }
 }
 
-asm int
+__norts__ asm int
 close(int fd)
 {
     asm

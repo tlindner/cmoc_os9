@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <os.h>
 
-asm int
+__norts__ asm int
 read(int fd, char *buf, int count)
 {
 	asm
@@ -39,7 +39,7 @@ rdexit  tfr     y,d             return read/write count in d
     }
 }
 
-asm int
+__norts__ asm int
 readln(int fd, char *buf, int count)
 {
 	asm

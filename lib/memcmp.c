@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <string.h>
 
-asm int
+__norts__ asm int
 memcmp(void *s1, void *s2, size_t n)
 {
 	asm

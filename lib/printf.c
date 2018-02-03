@@ -13,7 +13,7 @@ FILE *fpmp;
 char buf1[10];
 int dectbl[4]= {10000,1000,100,10};
 
-asm int
+__norts__ asm int
 printf(char *fmt, ...)
 {
     asm
@@ -37,7 +37,7 @@ __iob		EXTERNAL
 	}
 }
 
-asm int
+__norts__ asm int
 fprintf(FILE *fp, char *fmt, ...)
 {
     asm
@@ -58,7 +58,7 @@ printf1		stx   _fpmp,y					save FILE ptr to static
  }
  
  
-asm int
+__norts__ asm int
 sprintf(char *str, char *fmt, ...)
 {
     asm

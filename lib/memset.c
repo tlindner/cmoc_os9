@@ -2,7 +2,7 @@
 #include <sys/types.h>
 #include <string.h>
 
-asm void *
+__norts__ asm void *
 memset(void *dst, int src, size_t len)
 {
 	asm

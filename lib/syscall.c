@@ -1,6 +1,6 @@
 #include <os.h>
 
-asm error_code
+__norts__ asm error_code
 _os_syscall(int callcode, registers_6809 *registers)
 {
 	asm

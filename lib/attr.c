@@ -49,6 +49,5 @@ getfd
 		ldy         #16
 		ldb         #SS_FD
 		os9         I$GetStt 
-		rts
 	}
 }

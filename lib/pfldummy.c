@@ -15,6 +15,5 @@ asm {
  leax -2,x
  stb 1,x
 _1 tfr x,d
- rts
 }
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-asm void
+__norts__ asm void
 setbase(FILE *stream)
 {
     asm

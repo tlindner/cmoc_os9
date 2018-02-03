@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <os.h>
 
-asm int
+__norts__ asm int
 write(int fd, char *buf, int count)
 {
 	asm
@@ -29,7 +29,7 @@ write10 tfr     y,d
     }
 }
 
-asm int
+__norts__ asm int
 writeln(int fd, char *buf, int count)
 {
 	asm

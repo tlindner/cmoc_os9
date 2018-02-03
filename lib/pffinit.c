@@ -302,7 +302,7 @@ register char *s;
 
 char bytcnt; // significant byte count
 
-asm int _abnorm(double *d)
+__norts__ asm int _abnorm(double *d)
 {
 asm
 {

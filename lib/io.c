@@ -1,7 +1,7 @@
 #include "fcntl.h"
 
 
-asm error_code
+__norts__ asm error_code
 _os_create(char *pathname, int mode, path_id *path, int perm)
 {
 	asm
@@ -56,7 +56,7 @@ createok
 }
 
 
-asm error_code
+__norts__ asm error_code
 _os_open(char *pathname, int mode, path_id *path)
 {
     asm
@@ -80,7 +80,7 @@ _os_open(char *pathname, int mode, path_id *path)
 }
 
 
-asm error_code
+__norts__ asm error_code
 _os_close(path_id path)
 {
     asm
@@ -95,7 +95,7 @@ _os_close(path_id path)
 }
 
 
-asm error_code
+__norts__ asm error_code
 _os_delete(char *pathname, int mode)
 {
     asm
@@ -112,7 +112,7 @@ _os_delete(char *pathname, int mode)
 }
 
 
-asm error_code
+__norts__ asm error_code
 _os_makdir(char *pathname, int perm)
 {
     asm
@@ -129,7 +129,7 @@ _os_makdir(char *pathname, int perm)
 }
 
 
-asm error_code
+__norts__ asm error_code
 _os_read(path_id path, void *data, int *count)
 {
     asm
@@ -159,7 +159,7 @@ savecount sty		[6+4,s]
     }
 }
 
-asm error_code
+__norts__ asm error_code
 _os_readln(path_id path, void *data, int *count)
 {
     asm
@@ -179,7 +179,7 @@ _os_readln(path_id path, void *data, int *count)
 	}
 }
 
-asm error_code
+__norts__ asm error_code
 _os_write(path_id path, void *data, int *count)
 {
     asm
@@ -206,7 +206,7 @@ writeex
 	}
 }
 
-asm error_code
+__norts__ asm error_code
 _os_writeln(path_id path, void *data, int *count)
 {
     asm
@@ -226,7 +226,7 @@ _os_writeln(path_id path, void *data, int *count)
 	}
 }
 
-asm error_code
+__norts__ asm error_code
 _os_seek(path_id path, long position)
 {
     asm
@@ -246,7 +246,7 @@ _os_seek(path_id path, long position)
     }
 }
 
-asm long
+__norts__ asm long
 lseek(int path, long position, int whence)
 {
     asm

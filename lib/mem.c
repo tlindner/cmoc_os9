@@ -3,7 +3,7 @@
 
 int spare;
 
-asm void *
+__norts__ asm void *
 sbrk(int increase)
 {
 	asm
@@ -88,7 +88,6 @@ ibrk10  ldd     __mtop,y        get current _mtop
         rts    
         
 ibrkerr ldd     #-1             error
-        rts    
     }
 }
 
@@ -113,6 +112,5 @@ L0093   tfr     y,d           transfer address of new area upper bound into D
         clra   
         clrb   
         std     _spare,y      kill any leftover
-        rts 
     }
 }   

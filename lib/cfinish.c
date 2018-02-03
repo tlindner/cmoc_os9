@@ -2,7 +2,7 @@
 #include <os.h>
 
 #if 0
-asm int
+__norts__ asm int
 exit(int code)
 {
     asm
@@ -16,7 +16,7 @@ _tidyup EXTERNAL
     }
 }
 
-asm int
+__norts__ asm int
 _exit(int code)
 {
     asm

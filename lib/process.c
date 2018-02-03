@@ -1,6 +1,6 @@
 #include <os.h>
 
-asm error_code
+__norts__ asm error_code
 _os_send(int pid, int sig)
 {
     asm
@@ -13,7 +13,7 @@ _osret  EXTERNAL
     }
 }
  
-asm error_code
+__norts__ asm error_code
 _os_wait(int *pid)
 {
     asm
@@ -30,7 +30,7 @@ L001b   lbra        _osret
     }
 }
 
-asm error_code
+__norts__ asm error_code
 _os_setpr(int pid, int priority)
 {
     asm
@@ -64,7 +64,7 @@ _os_chain(void *modaddr, int paramsize, void *paramaddr, int type, int lang, int
     }
 }
 
-asm error_code
+__norts__ asm error_code
 _os_fork(void *modaddr, int paramsize, void *paramaddr, int type, int lang, int datasize, int *pid)
 {
     asm

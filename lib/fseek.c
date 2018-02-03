@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-asm long
+__norts__ asm long
 fseek(FILE *, long pos, int whence)
 {
     asm

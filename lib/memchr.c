@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <string.h>
 
-asm void *
+__norts__ asm void *
 memchr(void *data, int c, size_t len)
 {
 	asm

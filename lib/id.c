@@ -1,6 +1,6 @@
 #include <os.h>
 
-asm error_code
+__norts__ asm error_code
 _os_getpid(int *pid)
 {
     asm
@@ -21,7 +21,7 @@ _osret  EXTERNAL
     }
 }
 
-asm error_code
+__norts__ asm error_code
 _os_getuid(int *uid)
 {
     asm
@@ -39,7 +39,7 @@ _os_getuid(int *uid)
     }
 }
 
-asm error_code
+__norts__ asm error_code
 _os_asetuid(int uid)
 {
     asm
@@ -55,7 +55,7 @@ _os_asetuid(int uid)
 /* WARNING: Writes to system globals and process descriptor
  * won't work for Level 2!
  */
-asm error_code
+__norts__ asm error_code
 _os_setuid(int uid)
 {
     asm

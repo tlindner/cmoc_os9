@@ -8,7 +8,6 @@ strlen1 addb #1
  adca #0
  tst ,x+
  bne strlen1
- rts
 	}
 }
 

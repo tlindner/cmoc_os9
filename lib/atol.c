@@ -1,4 +1,4 @@
-asm long
+__norts__ asm long
 atol(char *str)
 {
 	asm

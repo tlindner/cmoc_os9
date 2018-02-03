@@ -2,7 +2,7 @@
 
 unsigned char G0000[4] = { 0, 0, 0, 0 };
 
-asm int
+__norts__ asm int
 rand(void)
 {
 	asm

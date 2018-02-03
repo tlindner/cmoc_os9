@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <os.h>
 
-asm int
+__norts__ asm int
 putc(int c, FILE *stream)
 {
     asm
@@ -83,7 +83,7 @@ L0079 	ldd   4,s               clean up stack
  	}
  }
  
-asm int
+__norts__ asm int
 putw(int w, FILE *stream)
 {
     asm
@@ -119,7 +119,7 @@ L009d 	pshs  x
 	}
 }
 
-asm int
+__norts__ asm int
 fclose(FILE *stream)
 {
     asm
@@ -150,7 +150,7 @@ L00c7 	pshs  d
 }
 
 
-asm int
+__norts__ asm int
 fflush(FILE *stream)
 {
     asm

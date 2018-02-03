@@ -1,6 +1,6 @@
 #include <os.h>
 
-asm error_code
+__norts__ asm error_code
 _os_modlink(char *modname, int lang, int type, void **modaddr)
 {
     asm
@@ -30,7 +30,7 @@ L000f   tfr     u,d
     }
 }
 
-asm error_code
+__norts__ asm error_code
 _os_modload(char *modname, int lang, int type, void **modaddr)
 {
     asm
@@ -54,7 +54,7 @@ _os_modload(char *modname, int lang, int type, void **modaddr)
     }
 }
 
-asm error_code
+__norts__ asm error_code
 _os_modunlink(void *modaddr)
 {
     asm
