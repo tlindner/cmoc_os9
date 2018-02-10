@@ -7,7 +7,7 @@ LFLAGS = -I../include -I../cgfx/include $(OS9FLAGS)
 	$(CC) $(LFLAGS) $^ $(OBJS) -L../lib -lc -L../cgfx -lcgfx
 
 
-TESTS	= timetest fiotest iotest osiotest syscalltest memtest wintest forktest printtest
+TESTS	= timetest fiotest iotest osiotest syscalltest memtest wintest forktest printtest maze
 
 all:	$(TESTS)
 
