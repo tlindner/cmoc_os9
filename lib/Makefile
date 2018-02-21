@@ -16,7 +16,7 @@ OS = stat.o id.o mod.o process.o cfinish.o tidyup.o
 MODS = $(CMOC) $(STRING) $(OS) $(IO) $(LOW_IO) $(MEM) $(SYS) $(MISC) $(MATH_SUPPORT) $(FLOAT_SUPPORT) $(LONG_SUPPORT) $(FILE_SUPPORT) time.o syscall.o syscommon.o
 CC = cmoc
 ASM = lwasm
-CFLAGS = -I../include
+CFLAGS = --os9 -I../include
 ASOUT = --obj -o
 
 %.o: %.as
