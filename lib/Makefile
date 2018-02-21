@@ -1,6 +1,6 @@
 # Makefile to create assembler library
 
-STRING = strlen.o
+STRING = strlen.o strcmp.o
 MEM = mem.o memory.o memchr.o memccpy.o memcmp.o memset.o memcpy.o memchr.o
 SYS = sleep.o
 IO = printf.o pffinit.o pflinit.o pfldummy.o putc.o iob_data.o setbase.o fseek.o fopen.o
