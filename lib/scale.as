@@ -1,4 +1,4 @@
- section bss
+ section rodata
 
 * Initialized Data (class G)
 atoftbl: fcb $00 
@@ -134,7 +134,7 @@ L0000 pshs  u
  rola   
  lslb   
  rola   
- leax  atoftbl,y 
+ leax  atoftbl,pcr
  leax  d,x 
  lbsr  _dmul 
  bra   L003e 

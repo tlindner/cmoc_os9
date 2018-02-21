@@ -1,4 +1,4 @@
- section bss
+ section rodata
 
 __chcodes EXPORT
 _chcodes EXPORT

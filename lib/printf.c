@@ -394,7 +394,7 @@ L0215 	ldd     fldsiz+6,s
 getdec 	clr     ,-s 
 		clr     ,-s 
 		leau    -1,u                 back up to char
-		leax    _chcodes,y 
+		leax    _chcodes,pcr
 		bra     getdec2 
 getdec1	ldd     ,s 
 		aslb   
