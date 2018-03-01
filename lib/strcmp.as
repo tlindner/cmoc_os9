@@ -2,6 +2,8 @@
 
  section code
 
+_strcmp EXPORT
+_strcmp
 strcmp: pshs  u 
  ldx   4,s 
  ldu   6,s 

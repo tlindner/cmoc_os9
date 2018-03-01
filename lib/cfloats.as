@@ -846,5 +846,37 @@ L0726 puls  u 		recover U pushed earlier
  std   ,s 		save back and return
  rts    
 
+
+* XXX: Should be in the compiler's runtime/builtin
+copyDWord IMPORT
+copySingle EXPORT
+copySingle
+ lbra copyDWord
+
+* XXX: Should be in the compiler's runtime/builtin
+divSingleSingle EXPORT
+divSingleSingle
+ rts
+
+* XXX: Should be in the compiler's runtime/builtin
+mulSingleSingle EXPORT
+mulSingleSingle
+ rts
+
+* XXX: Should be in the compiler's runtime/builtin
+cmpSingleSingle EXPORT
+cmpSingleSingle
+ rts
+
+* XXX: Should be in the compiler's runtime/builtin
+isSingleZero EXPORT
+isSingleZero
+ rts
+
+* XXX: Should be in the compiler's runtime/builtin
+subSingleSingle EXPORT
+subSingleSingle
+ rts
+
  endsect  
 

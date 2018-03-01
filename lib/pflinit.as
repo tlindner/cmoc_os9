@@ -4,9 +4,8 @@
 buf1 rmb 20
  endsect
 
- section code
 
-* section bss
+ section rodata
 ldectbl fdb $3b9a,$ca00
  fdb $05f5,$e100
  fdb $0098,$9680
@@ -16,9 +15,9 @@ ldectbl fdb $3b9a,$ca00
  fdb $0000,1000
  fdb $0000,100
  fdb $0000,10
-* endsect
+ endsect
 
-
+ section code
 
 _pflinit EXPORT
 _pflinit: rts
