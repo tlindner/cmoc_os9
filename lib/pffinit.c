@@ -51,7 +51,7 @@ static char *_ftoa(double *np0, int prec, int format, int c)    /* double to asc
        n = *np0;
        /* scale into range 1.0 <= n < 10.0 */
 
-       np = &n;        /* so we can get at the exponent */
+       np = (char *)&n;        /* so we can get at the exponent */
 
        /* remove bias and test for neg */
        if(np[7]==0) {
@@ -360,7 +360,7 @@ _outdig tfr d,x get float ptr
  lsrb
  lsrb
  lsrb
- addb #'0
+ addb #'0'
  pshs d,u save registers
  ldb 0,x clear new digit
  andb #$0F
