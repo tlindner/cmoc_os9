@@ -3,7 +3,7 @@
 STRING = strlen.o strcmp.o
 MEM = mem.o memory.o memchr.o memccpy.o memcmp.o memset.o memcpy.o memchr.o
 SYS = sleep.o
-IO = printf.o pffinit.o pflinit.o pfldummy.o putc.o iob_data.o setbase.o fseek.o fopen.o
+IO = printf.o pffinit.o pflinit.o pfldummy.o putc.o puts.o iob_data.o setbase.o fseek.o fopen.o
 LOW_IO = access.o create.o open.o read.o write.o
 MISC = rpterr.o chcodes.o htoi.o htol.o rand.o prof.o
 MATH_SUPPORT = ccmult.o ccdiv.o ccmod.o atoi.o abs.o
