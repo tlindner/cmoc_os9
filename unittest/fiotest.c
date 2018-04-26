@@ -15,7 +15,19 @@ void test_putw()
 {
 	assert(putw(0x4344, stdout) == 0);
 	assert(putw(0x4142, stdout) == 0);
+	assert(putc('\n', stdout) == '\n');
 	fflush(stdout);
+}
+
+void test_puts()
+{
+    puts( "puts test" );
+}
+
+void test_fputs(FILE *fp)
+{
+    fputs("fputs test", fp );
+    fputs("\n", fp );
 }
 
 void test_printf()
@@ -43,6 +55,8 @@ int main()
 {
 	test_putc();
 	test_putw();
+	test_puts();
+	test_fputs(stdout);
 	test_printf();
 	test_fprintf(stdout);
 	test_fprintf(stderr);

@@ -39,6 +39,8 @@ extern FILE _iob[_NFILE];
 int getc(FILE *stream);
 int putc(int c, FILE *stream);
 int putw(int w, FILE *stream);
+int puts(int c);
+int fputs(int c, FILE *stream);
 
 #define fgetc      	getc
 #define putchar(c) 	putc(c,stdout)
